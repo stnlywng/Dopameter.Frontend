@@ -1,0 +1,52 @@
+.transparentButton {
+    color: #6bc1ff !important;
+    text-decoration: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+.transparentButton:hover {
+    text-decoration: underline;
+}
+
+.transparentButton:focus {
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+.transparentButton:active {
+    color: #4fa1dc  !important;
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+Button:hover {
+    outline-color: transparent;
+    border-color: transparent !important;
+}
+
+Button:active {
+    outline-color: transparent;
+    border-color: transparent !important;
+}
+
+Button:focus {
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+FormLabel {
+    color: white;
+}
+
+Input {
+    color: white;
+}
+
+Input:focus{
+    border-color: #6bc1ff !important;
+}

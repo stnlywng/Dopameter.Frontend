@@ -1,0 +1,27 @@
+/* src/components/TopBar.module.css */
+.container {
+    position: fixed; /* Fixes the top bar to the top of the page */
+    top: 0;          /* Aligns it to the top edge */
+    left: 0;         /* Aligns it to the left edge */
+    right: 0;        /* Stretches it to the right edge */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 8px;
+    background-color: #333;
+    color: #fff;
+    z-index: 1000;   /* Ensures the top bar stays above other content */
+    height: 60px;
+  }
+  
+  .logo {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 0px 12px;
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 10px;
+    scale: 0.85;
+  }
