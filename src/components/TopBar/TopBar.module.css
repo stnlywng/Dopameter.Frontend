@@ -13,7 +13,7 @@
     z-index: 1000;   /* Ensures the top bar stays above other content */
     height: 60px;
   }
-  
+
   .logo {
     font-size: 20px;
     font-weight: bold;

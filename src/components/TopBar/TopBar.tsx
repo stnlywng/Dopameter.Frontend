@@ -1,19 +1,22 @@
 import styles from "./TopBar.module.css";
 import LoginButton from "../LoginButton/LoginButton";
-import SignUpButton from "../SignUpButton/SignUpButton";
+import { useUser } from "../../state-management/contexts/userContext";
+import AccountButton from "../AccountButton/AccountButton";
+import { isAuthenticated } from "../../utils/auth";
 
 const TopBar = () => {
-    return (
-        <>
-            <div className={styles.container}>
-                <div className={styles.logo}>Dopameter</div>
-                <div className={styles.buttons}>
-                    <LoginButton />
-                    <SignUpButton />
-                </div>
-            </div>
-        </>
-    );
+  const isAuth = isAuthenticated();
+
+  return (
+    <>
+      <div className={styles.container}>
+        <div className={styles.logo}>Dopameter</div>
+        <div className={styles.buttons}>
+          {!isAuth ? <LoginButton /> : <AccountButton />}
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default TopBar;

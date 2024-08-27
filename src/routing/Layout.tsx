@@ -1,20 +1,17 @@
-import TopBar from "../components/TopBar/TopBar";
+// Layout.tsx
+import React from "react";
 import { Outlet } from "react-router-dom";
-import { UserProvider } from "../state-management/contexts/userContext";
-import { ChakraProvider, theme } from "@chakra-ui/react";
-import { LoginProvider } from "../state-management/contexts/loginContext";
+import TopBar from "../components/TopBar/TopBar";
 
-const Layout = () => {
-    return (
-        <UserProvider>
-            <LoginProvider>
-                <ChakraProvider theme={theme}>
-                    <TopBar />
-                    <Outlet />
-                </ChakraProvider>
-            </LoginProvider>
-        </UserProvider>
-    );
+const Layout: React.FC = () => {
+  return (
+    <>
+      <TopBar />
+      <main>
+        <Outlet />
+      </main>
+    </>
+  );
 };
 
 export default Layout;

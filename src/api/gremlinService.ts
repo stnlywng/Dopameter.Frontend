@@ -15,7 +15,7 @@ class GremlinService {
 
     getGremlinsByUser(userId: number) {
         const controller = new AbortController();
-        const request = axiosInstance.get<Gremlin[]>(`/gremlin/user/${userId}`, {
+        const request = axiosInstance.get<Gremlin[]>(`/gremlin/currentgremlins`, {
             signal: controller.signal,
         });
         return {
@@ -26,7 +26,7 @@ class GremlinService {
 
     getOldGremlinsByUser(userId: number) {
         const controller = new AbortController();
-        const request = axiosInstance.get<Gremlin[]>(`/gremlin/user/old/${userId}`, {
+        const request = axiosInstance.get<Gremlin[]>(`/gremlin/oldgremlins`, {
             signal: controller.signal,
         });
         return {
@@ -37,7 +37,7 @@ class GremlinService {
 
     deleteGremlin(userId: number, gremlinId: number) {
         const controller = new AbortController();
-        const request = axiosInstance.delete(`/gremlin/${userId}/${gremlinId}`, {
+        const request = axiosInstance.delete(`/gremlin/${gremlinId}`, {
             signal: controller.signal,
         });
         return {
@@ -48,7 +48,7 @@ class GremlinService {
 
     updateGremlin(userId: number, gremlin: Gremlin) {
         const controller = new AbortController();
-        const request = axiosInstance.put(`/gremlin/${userId}`, gremlin, {
+        const request = axiosInstance.put(`/gremlin/`, gremlin, {
             signal: controller.signal,
         });
         return {
@@ -59,7 +59,7 @@ class GremlinService {
 
     createGremlin(userId: number, gremlin: Gremlin) {
         const controller = new AbortController();
-        const request = axiosInstance.post(`/gremlin/${userId}`, gremlin, {
+        const request = axiosInstance.post(`/gremlin/`, gremlin, {
             signal: controller.signal,
         });
         return {

@@ -5,29 +5,29 @@ import { CanceledError } from "axios";
 import { useUser } from "../state-management/contexts/userContext";
 
 const useGremlins = () => {
-    const [gremlins, setGremlins] = useState<Gremlin[]>([]);
-    const [error, setError] = useState("");
-    const [isLoading, setLoading] = useState(false);
-    const { userId, setUserId } = useUser();
+  const [gremlins, setGremlins] = useState<Gremlin[]>([]);
+  const [error, setError] = useState("");
+  const [isLoading, setLoading] = useState(false);
+  const { userID, setUserID } = useUser();
 
-    useEffect(() => {
-        setLoading(true);
-        const { request, cancel } = GremlinService.getGremlinsByUser(userId);
-        request
-            .then((res) => {
-                setGremlins(res.data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                if (err instanceof CanceledError) return;
-                setError(err.message);
-                setLoading(false);
-            });
+  useEffect(() => {
+    setLoading(true);
+    const { request, cancel } = GremlinService.getGremlinsByUser(userID);
+    request
+      .then((res) => {
+        setGremlins(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        setError(err.message);
+        setLoading(false);
+      });
 
-        return () => cancel();
-    }, []);
+    return () => cancel();
+  }, []);
 
-    return { gremlins, error, isLoading, setGremlins, setError };
+  return { gremlins, error, isLoading, setGremlins, setError };
 };
 
 export default useGremlins;
