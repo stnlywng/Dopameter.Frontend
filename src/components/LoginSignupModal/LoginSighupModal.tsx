@@ -16,7 +16,6 @@ import {
 import { useLogin } from "../../state-management/contexts/loginContext";
 import React, { useState } from "react";
 import styles from "./LoginSighupModal.module.css";
-import { useUser } from "../../state-management/contexts/userContext";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/api-client";
 import { z } from "zod";
@@ -56,7 +55,6 @@ type AuthResponse = {
 
 const LoginSighupModal = () => {
   const { isOpen, setLoginOpen } = useLogin();
-  const { setUserID, setEmail, setUsername } = useUser();
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate(); // For redirecting
 
@@ -96,18 +94,14 @@ const LoginSighupModal = () => {
         // Store the token and userId in localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("userID", userID.toString());
-
-        setUserID(userID);
-        setEmail(email);
-        setUsername(username);
+        localStorage.setItem("username", username);
+        localStorage.setItem("email", email);
 
         // Redirect to a protected page after successful login
         navigate("/home");
 
         // Optionally, you can also set these values in your state/context
         console.log("Login successful:", response.data);
-        console.log(localStorage.getItem("token")); // Check if token is being stored
-        console.log("username set to: ", username);
       })
       .catch((err) => {
         if (err instanceof CanceledError) return;
@@ -174,16 +168,16 @@ const LoginSighupModal = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("userID", userID.toString());
 
-        setUserID(userID);
-        setEmail(email);
-        setUsername(username);
+        localStorage.setItem("token", token);
+        localStorage.setItem("userID", userID.toString());
+        localStorage.setItem("username", username);
+        localStorage.setItem("email", email);
 
         // Redirect to a protected page after successful login
         navigate("/home");
 
         // Optionally, you can also set these values in your state/context
         console.log("Sign Up successful:", response.data);
-        console.log(localStorage.getItem("token")); // Check if token is being stored
       })
       .catch((err) => {
         if (err instanceof CanceledError) return;
@@ -240,7 +234,7 @@ const LoginSighupModal = () => {
             Dopameter
           </Text>
         </Center>
-        <ModalBody pb={0}>
+        <ModalBody pb={6}>
           <form
             onSubmit={
               isLogin
@@ -337,8 +331,6 @@ const LoginSighupModal = () => {
 
           <Center>{renderToggleText()}</Center>
         </ModalBody>
-
-        <ModalFooter />
       </ModalContent>
     </Modal>
   );

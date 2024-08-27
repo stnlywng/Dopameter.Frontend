@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import { Gremlin } from "../types/Gremlin";
 import GremlinService from "../api/gremlinService";
 import { CanceledError } from "axios";
-import { useUser } from "../state-management/contexts/userContext";
 
 const useGremlins = () => {
   const [gremlins, setGremlins] = useState<Gremlin[]>([]);
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const { userID, setUserID } = useUser();
+  const userID = Number(localStorage.getItem("userID"));
 
   useEffect(() => {
     setLoading(true);

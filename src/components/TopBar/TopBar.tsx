@@ -1,6 +1,5 @@
 import styles from "./TopBar.module.css";
 import LoginButton from "../LoginButton/LoginButton";
-import { useUser } from "../../state-management/contexts/userContext";
 import AccountButton from "../AccountButton/AccountButton";
 import { isAuthenticated } from "../../utils/auth";
 
