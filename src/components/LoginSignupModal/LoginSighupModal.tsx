@@ -98,6 +98,7 @@ const LoginSighupModal = () => {
         localStorage.setItem("email", email);
 
         // Redirect to a protected page after successful login
+        setLoginOpen(false);
         navigate("/home");
 
         // Optionally, you can also set these values in your state/context
@@ -167,12 +168,10 @@ const LoginSighupModal = () => {
         // Store the token and userId in localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("userID", userID.toString());
-
-        localStorage.setItem("token", token);
-        localStorage.setItem("userID", userID.toString());
         localStorage.setItem("username", username);
         localStorage.setItem("email", email);
 
+        setLoginOpen(false);
         // Redirect to a protected page after successful login
         navigate("/home");
 

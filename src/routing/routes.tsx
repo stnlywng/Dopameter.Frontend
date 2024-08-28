@@ -4,6 +4,8 @@ import HomePage from "./HomePage";
 import ErrorPage from "./ErrorPage";
 import LandingPage from "./LandingPage";
 import PrivateRoutes from "./PrivateRoutes";
+import InfoPage from "./InfoPage";
+import TopBar from "../components/TopBar/TopBar";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +17,15 @@ const router = createBrowserRouter([
   {
     element: <PrivateRoutes />,
     children: [{ path: "home", element: <HomePage /> }],
+  },
+  {
+    path: "/info",
+    element: (
+      <>
+        <TopBar />
+        <InfoPage />
+      </>
+    ),
   },
 ]);
 

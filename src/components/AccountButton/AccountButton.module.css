@@ -1,6 +1,0 @@
-MenuButton {
-    colorScheme="purple"
-        backgroundColor="#9D8DF1"
-        _hover={{ bg: "#9484E3" }}
-        variant="solid"
-}

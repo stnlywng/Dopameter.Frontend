@@ -1,0 +1,49 @@
+.teeter-totter {
+    width: 400px; /* Ensure width is set */
+    height: 20px; /* Ensure height is set */
+    background-color: #555; /* Add a visible background color */
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 10px; /* Optional: make the teeter-totter rounded */
+  }
+  
+  .teeter-totter-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: lightblue; /* Add background for better contrast */
+  }
+  
+  .side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .pleasure-side {
+    background-color: lightgreen;
+  }
+  
+  .pain-side {
+    background-color: lightcoral;
+  }
+  
+  .gremlin {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .buttons-container {
+    margin-top: 20px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+  }
+  
