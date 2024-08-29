@@ -102,12 +102,13 @@ Color Scheme:
     color: #888;
   }
 
-  @font-face {
+/* SETTING UP THE FONT */
+@font-face {
     font-family: 'VCR OSD Mono';
     src: url('./assets/fonts/VCR_OSD_Mono.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
-  }
+}
   
 h1{
     font-size: 7em;
@@ -123,4 +124,26 @@ h3{
 
 div{
     font-family: 'VCR OSD Mono', monospace;
+}
+
+/* SCROLL BAR ON THE RIGHT STYLING. */
+/* For Webkit-based browsers like Chrome, Safari, and newer versions of Edge */
+::-webkit-scrollbar {
+    width: 12px;
+}
+  
+::-webkit-scrollbar-track {
+    background: #1a1a1a; /* Dark background for the scrollbar track */
+}
+  
+::-webkit-scrollbar-thumb {
+    background-color: #555; /* Dark color for the scrollbar thumb */
+    border-radius: 10px; /* Optional: Round the scrollbar thumb */
+    border: 2px solid #1a1a1a; /* Optional: Create padding around the thumb */
+}
+  
+/* For Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #555 #1a1a1a; /* Scrollbar thumb color followed by track color */
 }

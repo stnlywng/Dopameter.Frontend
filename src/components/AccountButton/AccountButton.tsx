@@ -28,15 +28,22 @@ const AccountButton = () => {
       >
         Welcome {username}!
       </MenuButton>
-      <MenuList backgroundColor="#9D8DF1">
+      <MenuList backgroundColor="#9D8DF1" p={0}>
         <MenuItem
           backgroundColor="#9D8DF1"
           _hover={{ bg: "#9484E3" }}
           onClick={handleLogout}
+          m={0}
+          p={3}
         >
           Log Out
         </MenuItem>
-        <MenuItem backgroundColor="#9D8DF1" _hover={{ bg: "#9484E3" }}>
+        <MenuItem
+          backgroundColor="#9D8DF1"
+          _hover={{ bg: "#9484E3" }}
+          m={0}
+          p={3}
+        >
           Account Settings
         </MenuItem>
       </MenuList>

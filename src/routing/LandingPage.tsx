@@ -49,7 +49,9 @@ const LandingPage = () => {
           <ApiTestComponent />
         </div>
       </div>
-      <div></div>
+      <div className={styles["footer"]}>
+        <p>©2024 Dopameter</p>
+      </div>
     </>
   );
 };
