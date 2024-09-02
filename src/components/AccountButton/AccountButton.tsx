@@ -43,6 +43,7 @@ const AccountButton = () => {
           _hover={{ bg: "#9484E3" }}
           m={0}
           p={3}
+          borderRadius={6}
         >
           Account Settings
         </MenuItem>

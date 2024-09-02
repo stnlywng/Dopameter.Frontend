@@ -14,7 +14,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { useLogin } from "../../state-management/contexts/loginContext";
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./LoginSighupModal.module.css";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/api-client";
@@ -26,7 +26,7 @@ import { CanceledError } from "axios";
 // Define validation schemas
 const loginSchema = z.object({
   username: z.string().min(1, { message: "Username or Email is required" }),
-  password: z.string(),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 const signupSchema = z
@@ -280,7 +280,28 @@ const LoginSighupModal = () => {
             )}
 
             <FormControl mt={4}>
-              <FormLabel color="white">Password</FormLabel>
+              <FormLabel
+                color="white"
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                w="100%"
+              >
+                Password
+                {isLogin && (
+                  <Button
+                    variant="link"
+                    color="#6bc1ff"
+                    className={styles.transparentButton}
+                    fontSize="sm"
+                    onClick={() => console.log("Forgot Password Clicked")}
+                    m={0}
+                  >
+                    Forgot password?
+                  </Button>
+                )}
+              </FormLabel>
+
               <Input
                 {...(isLogin
                   ? loginRegister("password")
@@ -288,6 +309,7 @@ const LoginSighupModal = () => {
                 type="password"
                 placeholder="Password"
               />
+
               {isLogin && loginErrors.password && (
                 <Text color="red.500" fontSize="sm">
                   {loginErrors.password.message}
@@ -322,7 +344,7 @@ const LoginSighupModal = () => {
               mx="auto"
               mt={7}
               type="submit"
-              disabled={!isLogin ? !isSignupValid : !isLoginValid}
+              isDisabled={!isLogin ? !isSignupValid : !isLoginValid}
             >
               {isLogin ? "Login" : "Sign Up"}
             </Button>
