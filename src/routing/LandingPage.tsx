@@ -41,8 +41,27 @@ const LandingPage = () => {
               color: "black",
               borderColor: "black",
             }}
+            width={188}
           >
             How it works.
+          </Button>
+          <Button
+            borderColor={"white"}
+            color={"white"}
+            borderRadius={12}
+            borderWidth={2}
+            background={"transparent"}
+            onClick={() => navigate("/info")}
+            size={"lg"}
+            ml={3}
+            _hover={{
+              backgroundColor: "#fafafa",
+              color: "black",
+              borderColor: "black",
+            }}
+            width={188}
+          >
+            See a Demo.
           </Button>
         </div>
         <div>

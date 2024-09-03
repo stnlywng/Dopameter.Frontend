@@ -20,7 +20,10 @@ const HomePage = () => {
         />
       </div>
       <div className={styles["content"]}>
-        <TeeterTotter />
+        <TeeterTotter
+          isCreateGrem={isCreateGrem}
+          setIsCreateGrem={setIsCreateGrem}
+        />
       </div>
       <div className={styles["add-gremlin-button"]}>
         <Button
@@ -48,12 +51,6 @@ const HomePage = () => {
           +
         </Button>
       </div>
-      {isCreateGrem && (
-        <CreateGremlinModal
-          isCreateGrem={isCreateGrem}
-          setIsCreateGrem={setIsCreateGrem}
-        />
-      )}
     </div>
   );
 };

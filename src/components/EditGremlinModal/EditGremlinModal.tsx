@@ -21,7 +21,7 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import gremlinStyle1 from "/src/assets/badgremlin/BlueGremlinFront.png";
 import gremlinStyle2 from "/src/assets/badgremlin/GreenGremlinFront.png";
 import gremlinStyle3 from "/src/assets/badgremlin/OrangeGremlinFront.png";
@@ -30,39 +30,76 @@ import gremlinStyle5 from "/src/assets/goodgremlin/Blue.png";
 import gremlinStyle6 from "/src/assets/goodgremlin/Orange.png";
 import axiosInstance from "../../api/api-client";
 import { CanceledError } from "axios";
+import GremlinService from "../../api/gremlinService";
 import useGremlins from "../../hooks/useGremlins";
 
-const createGremlinSchema = z.object({
+const editGremlinSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }).default(""),
   kindOfGremlin: z.number().default(1),
-  activityName: z
-    .string()
-    .min(1, { message: "Name is required" })
-    .default("")
-    .optional(),
+  activityName: z.string().min(1, { message: "Name is required" }).default(""),
   intensity: z.number().min(1).max(1000).default(50),
 });
 
-type CreateGremlinData = z.infer<typeof createGremlinSchema>;
+type EditGremlinData = z.infer<typeof editGremlinSchema>;
 
-interface CreateGremlinModalProps {
-  isCreateGrem: boolean;
-  setIsCreateGrem: (open: boolean) => void;
-  updateGremlins: () => void;
+interface EditGremlinModalProps {
+  isEditGrem: boolean;
+  gremlinID: number;
+  setIsEditGrem: (value: boolean) => void;
+  resetHoveredGremlin: () => void;
 }
 
-const CreateGremlinModal = ({
-  isCreateGrem,
-  setIsCreateGrem,
-  updateGremlins,
-}: CreateGremlinModalProps) => {
+const EditGremlinModal = ({
+  isEditGrem,
+  gremlinID,
+  setIsEditGrem,
+  resetHoveredGremlin,
+}: EditGremlinModalProps) => {
   const [sliderValue, setSliderValue] = useState(50);
   const [showTooltip, setShowTooltip] = React.useState(false);
   const [useGremlinNameAsActivity, setUseGremlinNameAsActivity] =
     useState(false);
 
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const [mode, setMode] = useState<"pleasure" | "pain">("pleasure"); // Mode toggle
   const [selectedStyle, setSelectedStyle] = useState(1); // Style toggle
+  const { updateGremlins } = useGremlins();
+
+  useEffect(() => {
+    setLoading(true);
+    const { request, cancel } = GremlinService.getGremlinById(gremlinID);
+
+    request
+      .then((res) => {
+        console.log("ran the getgrembyid with ID: " + gremlinID);
+        setValue("name", res.data.name);
+        setValue("activityName", res.data.activityName);
+        setValue("intensity", res.data.intensity);
+        setSliderValue(res.data.intensity);
+        setValue("kindOfGremlin", res.data.kindOfGremlin);
+        setSelectedStyle(res.data.kindOfGremlin);
+        if (res.data.kindOfGremlin < 4) {
+          setMode("pleasure");
+        } else {
+          setMode("pain");
+        }
+        if (res.data.activityName === res.data.name) {
+          setUseGremlinNameAsActivity(true);
+        }
+        trigger("name");
+        trigger("activityName");
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        setError(err.message);
+        setLoading(false);
+      });
+
+    return () => cancel();
+  }, []);
 
   const {
     register: gremlinRegister,
@@ -71,8 +108,8 @@ const CreateGremlinModal = ({
     watch,
     setValue,
     trigger,
-  } = useForm<CreateGremlinData>({
-    resolver: zodResolver(createGremlinSchema),
+  } = useForm<EditGremlinData>({
+    resolver: zodResolver(editGremlinSchema),
     mode: "onChange",
   });
 
@@ -101,26 +138,25 @@ const CreateGremlinModal = ({
     setValue("kindOfGremlin", style);
   };
 
-  const handleCreate = (data: CreateGremlinData) => {
-    console.log("Gremlin created:", data);
-
+  const handleEdit = (data: EditGremlinData) => {
     const controller = new AbortController();
     const { name, kindOfGremlin, activityName, intensity } = data;
 
     axiosInstance
-      .post(
+      .put(
         "/gremlin",
-        { name, kindOfGremlin, activityName, intensity },
+        { gremlinID, name, activityName, kindOfGremlin, intensity },
         { signal: controller.signal }
       )
       .then((response) => {
-        setIsCreateGrem(false);
+        setIsEditGrem(false);
+        resetHoveredGremlin();
         updateGremlins();
-        console.log("Gremlin creation successful:", response.data);
+        console.log("Gremlin edit successful:", response.data);
       })
       .catch((err) => {
         if (err instanceof CanceledError) return;
-        console.error("Gremlin creation error:", err.message);
+        console.error("Gremlin edit error:", err.message);
       });
     return () => controller.abort();
   };
@@ -151,8 +187,8 @@ const CreateGremlinModal = ({
   };
 
   return (
-    <Modal isOpen={isCreateGrem} onClose={() => setIsCreateGrem(false)}>
-      <ModalOverlay />
+    <Modal isOpen={isEditGrem} onClose={() => setIsEditGrem(false)}>
+      <ModalOverlay opacity={90} />
       <ModalContent bg="#333" width={"550px"} maxW={"550px"} padding={45}>
         <ModalCloseButton color="white" />
         <Center mt={2}>
@@ -167,7 +203,7 @@ const CreateGremlinModal = ({
         </Center>
         <Center pt={0} pb={2}>
           <Text fontSize="xl" fontWeight="bold" color="white">
-            Add Gremlin
+            Edit Gremlin
           </Text>
         </Center>
 
@@ -197,7 +233,7 @@ const CreateGremlinModal = ({
           </Button>
         </Center>
 
-        <form onSubmit={handleGremlinSubmit(handleCreate)}>
+        <form onSubmit={handleGremlinSubmit(handleEdit)}>
           {/* Gremlin Name */}
           <FormControl>
             <FormLabel color="white">Gremlin Name</FormLabel>
@@ -350,7 +386,7 @@ const CreateGremlinModal = ({
             type="submit"
             isDisabled={!isGremlinValid}
           >
-            Create Gremlin
+            Confirm Edit
           </Button>
         </form>
       </ModalContent>
@@ -358,4 +394,4 @@ const CreateGremlinModal = ({
   );
 };
 
-export default CreateGremlinModal;
+export default EditGremlinModal;

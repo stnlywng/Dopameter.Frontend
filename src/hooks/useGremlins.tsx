@@ -9,7 +9,7 @@ const useGremlins = () => {
   const [isLoading, setLoading] = useState(false);
   const userID = Number(localStorage.getItem("userID"));
 
-  useEffect(() => {
+  const updateGremlins = () => {
     setLoading(true);
     const { request, cancel } = GremlinService.getGremlinsByUser(userID);
     request
@@ -24,9 +24,20 @@ const useGremlins = () => {
       });
 
     return () => cancel();
+  };
+
+  useEffect(() => {
+    updateGremlins();
   }, []);
 
-  return { gremlins, error, isLoading, setGremlins, setError };
+  return {
+    gremlins,
+    error,
+    isLoading,
+    updateGremlins, // Expose this so you can call it manually to trigger an update
+    setGremlins,
+    setError,
+  };
 };
 
 export default useGremlins;

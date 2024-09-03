@@ -41,6 +41,8 @@ import badOrangeGremlin_5 from "/src/assets/badgremlin/badOrangeGremlin_5.png";
 import defaultGremlin from "/src/assets/goodgremlin/Pink.png"; // Default image
 
 import { useState } from "react";
+import EditGremlinModal from "../EditGremlinModal/EditGremlinModal";
+import CreateGremlinModal from "../CreateGremlinModal/CreateGremlinModal";
 
 const imageMapping: { [style: number]: { [fatness: number]: string } } = {
   4: {
@@ -98,10 +100,29 @@ const getGremlinImage = (style: number, fatness: number) => {
   return imageMapping[style]?.[fatnessLevel] || defaultGremlin; // Fallback to default image
 };
 
-const TeeterTotter = () => {
+interface TeeterTotterProps {
+  isCreateGrem: boolean;
+  setIsCreateGrem: (value: boolean) => void;
+}
+
+const TeeterTotter: React.FC<TeeterTotterProps> = ({
+  isCreateGrem,
+  setIsCreateGrem,
+}) => {
   const [tilt, setTilt] = useState(0);
-  const { gremlins, error, isLoading, setGremlins, setError } = useGremlins();
-  const [hoveredGremlin, setHoveredGremlin] = useState<number | null>(null);
+  const { gremlins, error, isLoading, setGremlins, setError, updateGremlins } =
+    useGremlins();
+  const [hoveredGremlin, setHoveredGremlin] = useState<number>(-1);
+  const [isEditGrem, setIsEditGrem] = useState(false);
+
+  var goodGremPosCount = 0;
+  var badGremPosCount = 0;
+
+  const calculateHeight = (intensity: number) => {
+    const calculatedValue =
+      ((intensity / 1000) * 65 + 35) / (13 * (gremlins.length / 9));
+    return calculatedValue > 12 ? "12vw" : `${calculatedValue}vw`;
+  };
 
   return (
     <div className={styles["teeter-totter-container"]}>
@@ -159,16 +180,26 @@ const TeeterTotter = () => {
             style={{
               left:
                 currentGremlin.kindOfGremlin < 4
-                  ? `${index * 120}px`
+                  ? `${
+                      (badGremPosCount++ * ((7.5 / gremlins.length) * 140)) / 22
+                    }vw`
                   : undefined,
               right:
                 currentGremlin.kindOfGremlin >= 4
-                  ? `${index * 120}px`
+                  ? `${
+                      (goodGremPosCount++ * ((7.5 / gremlins.length) * 140)) /
+                      22
+                    }vw`
                   : undefined,
-              height: `${(currentGremlin.intensity / 1000) * 65 + 35}%`,
+              height: calculateHeight(currentGremlin.intensity),
             }}
             onMouseEnter={() => setHoveredGremlin(currentGremlin.gremlinID)} // Track gremlin on hover
-            onMouseLeave={() => setHoveredGremlin(null)} // Reset when not hovering
+            onMouseLeave={() => {
+              if (!isEditGrem) {
+                setHoveredGremlin(-1);
+              }
+            }}
+            onMouseDown={() => setIsEditGrem(true)}
           >
             <Image
               boxSize="100%"
@@ -185,13 +216,13 @@ const TeeterTotter = () => {
               }}
             />
 
-            {hoveredGremlin === currentGremlin.gremlinID && (
+            {/* {hoveredGremlin === currentGremlin.gremlinID && (
               <div style={{ position: "relative", bottom: "100%" }}>
                 <Text position="relative" bottom="30px" fontSize="xl">
                   {currentGremlin.name}
                 </Text>
               </div>
-            )}
+            )} */}
 
             {/* Show the details square if this gremlin is being hovered */}
             {hoveredGremlin === currentGremlin.gremlinID && (
@@ -216,7 +247,9 @@ const TeeterTotter = () => {
                 borderRadius={5}
                 textAlign="left" // Ensure text is left-aligned
                 zIndex={10} // Ensure it appears above other content
+                minWidth={180}
               >
+                <p>Name: {currentGremlin.name}</p>
                 <p>Activity: {currentGremlin.activityName}</p>
                 <p>Intensity: {currentGremlin.intensity}</p>
               </Box>
@@ -224,6 +257,24 @@ const TeeterTotter = () => {
           </div>
         ))}
       </motion.div>
+      {isEditGrem && (
+        <EditGremlinModal
+          isEditGrem={isEditGrem}
+          gremlinID={hoveredGremlin}
+          setIsEditGrem={setIsEditGrem}
+          resetHoveredGremlin={() => {
+            setHoveredGremlin(-1);
+            updateGremlins();
+          }}
+        />
+      )}
+      {isCreateGrem && (
+        <CreateGremlinModal
+          isCreateGrem={isCreateGrem}
+          setIsCreateGrem={setIsCreateGrem}
+          updateGremlins={updateGremlins}
+        />
+      )}
     </div>
   );
 };
