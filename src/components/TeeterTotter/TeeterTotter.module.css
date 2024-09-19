@@ -13,9 +13,10 @@
     width: 80%;
     height: 100%;
     position: absolute;
-    bottom: 27.9%;
+    bottom: 32.3%;
     display: flex;
     justify-content: space-between;
+    z-index: 30;
 }
 
   
@@ -39,7 +40,7 @@
 
 .log{
     position: absolute;
-    bottom: 15%;
+    bottom: 20.1%;
     padding: 0;
     margin: 0;
     height: 13%;
@@ -60,9 +61,17 @@
 
 .gremlin{
     position: absolute;
-    bottom: 7.6%;
+    bottom: 7.3%;
     padding: 0;
     margin: 0;
 }
 
+.hoverbox{
+    position: absolute;
+    bottom: 15%;
+    height: 370px;
+    width: 85%;
+    left: 7.5%;
+    z-index: 20;
+}
   

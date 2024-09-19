@@ -8,7 +8,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalOverlay,
   Text,
   Image,
@@ -46,7 +45,7 @@ const signupSchema = z
 type LoginFormData = z.infer<typeof loginSchema>;
 type SignupFormData = z.infer<typeof signupSchema>;
 
-type AuthResponse = {
+export type AuthResponse = {
   token: string;
   userID: number;
   email: string;
@@ -222,10 +221,10 @@ const LoginSighupModal = () => {
         <ModalCloseButton color="white" />
         <Center mt={10}>
           <Image
-            src="/src/assets/dopameter_logo2.png"
+            src="/src/assets/goodgremlin/Blue.png"
             alt="Website Logo"
-            boxSize="100px"
-            width={140}
+            boxSize="160px"
+            width={196}
           />
         </Center>
         <Center pt={0} pb={2}>

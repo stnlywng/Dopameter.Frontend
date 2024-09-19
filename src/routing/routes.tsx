@@ -6,6 +6,7 @@ import LandingPage from "./LandingPage";
 import PrivateRoutes from "./PrivateRoutes";
 import InfoPage from "./InfoPage";
 import TopBar from "../components/TopBar/TopBar";
+import DemoPage from "./DemoPage";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,15 @@ const router = createBrowserRouter([
       <>
         <TopBar />
         <InfoPage />
+      </>
+    ),
+  },
+  {
+    path: "/demo",
+    element: (
+      <>
+        <TopBar />
+        <DemoPage />
       </>
     ),
   },

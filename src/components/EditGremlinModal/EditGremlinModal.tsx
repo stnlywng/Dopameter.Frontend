@@ -36,6 +36,7 @@ import useGremlins from "../../hooks/useGremlins";
 const editGremlinSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }).default(""),
   kindOfGremlin: z.number().default(1),
+  pleasurePain: z.number().default(1),
   activityName: z.string().min(1, { message: "Name is required" }).default(""),
   intensity: z.number().min(1).max(1000).default(50),
 });
@@ -60,15 +61,14 @@ const EditGremlinModal = ({
   const [useGremlinNameAsActivity, setUseGremlinNameAsActivity] =
     useState(false);
 
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const [mode, setMode] = useState<"pleasure" | "pain">("pleasure"); // Mode toggle
+  const [mode, setMode] = useState<"unhealthy" | "healthy">("unhealthy"); // Mode toggle
+  const [pleasurePain, setPleasurePain] = useState<"pleasure" | "pain">(
+    "pleasure"
+  ); // pleasurePain toggle
   const [selectedStyle, setSelectedStyle] = useState(1); // Style toggle
   const { updateGremlins } = useGremlins();
 
   useEffect(() => {
-    setLoading(true);
     const { request, cancel } = GremlinService.getGremlinById(gremlinID);
 
     request
@@ -79,23 +79,26 @@ const EditGremlinModal = ({
         setValue("intensity", res.data.intensity);
         setSliderValue(res.data.intensity);
         setValue("kindOfGremlin", res.data.kindOfGremlin);
+        setValue("pleasurePain", res.data.pleasurePain);
         setSelectedStyle(res.data.kindOfGremlin);
         if (res.data.kindOfGremlin < 4) {
-          setMode("pleasure");
+          setMode("unhealthy");
         } else {
-          setMode("pain");
+          setMode("healthy");
+        }
+        if (res.data.pleasurePain === 1) {
+          setPleasurePain("pleasure");
+        } else {
+          setPleasurePain("pain");
         }
         if (res.data.activityName === res.data.name) {
           setUseGremlinNameAsActivity(true);
         }
         trigger("name");
         trigger("activityName");
-        setLoading(false);
       })
       .catch((err) => {
         if (err instanceof CanceledError) return;
-        setError(err.message);
-        setLoading(false);
       });
 
     return () => cancel();
@@ -104,7 +107,7 @@ const EditGremlinModal = ({
   const {
     register: gremlinRegister,
     handleSubmit: handleGremlinSubmit,
-    formState: { errors: gremlinErrors, isValid: isGremlinValid },
+    formState: { isValid: isGremlinValid },
     watch,
     setValue,
     trigger,
@@ -126,11 +129,17 @@ const EditGremlinModal = ({
     }
   };
 
-  const handleModeChange = (newMode: "pleasure" | "pain") => {
+  const handleModeChange = (newMode: "unhealthy" | "healthy") => {
     setMode(newMode);
-    const defaultStyle = newMode === "pleasure" ? 1 : 4;
+    const defaultStyle = newMode === "unhealthy" ? 1 : 4;
     setSelectedStyle(defaultStyle);
     setValue("kindOfGremlin", defaultStyle);
+  };
+
+  const handlePleasurePainChange = (newPleasurePain: "pleasure" | "pain") => {
+    setPleasurePain(newPleasurePain);
+    const pleasurePainNumber = newPleasurePain === "pleasure" ? 1 : 2;
+    setValue("pleasurePain", pleasurePainNumber);
   };
 
   const handleStyleSelect = (style: number) => {
@@ -140,12 +149,19 @@ const EditGremlinModal = ({
 
   const handleEdit = (data: EditGremlinData) => {
     const controller = new AbortController();
-    const { name, kindOfGremlin, activityName, intensity } = data;
+    const { name, kindOfGremlin, pleasurePain, activityName, intensity } = data;
 
     axiosInstance
       .put(
         "/gremlin",
-        { gremlinID, name, activityName, kindOfGremlin, intensity },
+        {
+          gremlinID,
+          name,
+          activityName,
+          pleasurePain,
+          kindOfGremlin,
+          intensity,
+        },
         { signal: controller.signal }
       )
       .then((response) => {
@@ -163,7 +179,7 @@ const EditGremlinModal = ({
 
   // Example color schemes for different styles
   const styleColors =
-    mode === "pleasure"
+    mode === "unhealthy"
       ? ["#93B1FF", "#137A74", "#FF8754"] // Example colors for pleasure
       : ["#CF5497", "#3993FF", "#FFC42D"]; // Example colors for pain
 
@@ -210,26 +226,52 @@ const EditGremlinModal = ({
         {/* Pleasure or Pain Selection */}
         <Center mt={3} gap={0} mb={4}>
           <Button
-            colorScheme={mode === "pleasure" ? "purple" : "gray"}
+            colorScheme={pleasurePain === "pleasure" ? "purple" : "gray"}
             variant="solid"
             width="230px"
             fontSize="sm"
             height={"30px"}
             borderRightRadius={0}
-            onClick={() => handleModeChange("pleasure")}
+            onClick={() => handlePleasurePainChange("pleasure")}
           >
             Pleasure
           </Button>
           <Button
-            colorScheme={mode === "pain" ? "whatsapp" : "gray"}
+            colorScheme={pleasurePain === "pain" ? "whatsapp" : "gray"}
             variant="solid"
             width="230px"
             fontSize="sm"
             height={"30px"}
             borderLeftRadius={0}
-            onClick={() => handleModeChange("pain")}
+            onClick={() => handlePleasurePainChange("pain")}
           >
             Pain
+          </Button>
+        </Center>
+
+        {/* Healthy or Not Selection */}
+        <Center mt={3} gap={0} mb={4}>
+          <Button
+            colorScheme={mode === "unhealthy" ? "purple" : "gray"}
+            variant="solid"
+            width="230px"
+            fontSize="sm"
+            height={"30px"}
+            borderRightRadius={0}
+            onClick={() => handleModeChange("unhealthy")}
+          >
+            Unhealthy
+          </Button>
+          <Button
+            colorScheme={mode === "healthy" ? "whatsapp" : "gray"}
+            variant="solid"
+            width="230px"
+            fontSize="sm"
+            height={"30px"}
+            borderLeftRadius={0}
+            onClick={() => handleModeChange("healthy")}
+          >
+            Healthy
           </Button>
         </Center>
 
@@ -246,7 +288,7 @@ const EditGremlinModal = ({
                 }
                 trigger("name");
               }}
-              onInput={(event) => {
+              onInput={() => {
                 if (useGremlinNameAsActivity) {
                   setValue("activityName", gremlinName);
                 }
@@ -309,7 +351,7 @@ const EditGremlinModal = ({
               <Text
                 onClick={() =>
                   setSelectedStyle(
-                    mode === "pleasure"
+                    mode === "unhealthy"
                       ? Math.floor(Math.random() * 3) + 1
                       : Math.floor(Math.random() * 3) + 4
                   )
@@ -325,7 +367,7 @@ const EditGremlinModal = ({
             </FormLabel>
             <Center gap={2}>
               {styleColors.map((color, idx) => {
-                const styleNumber = mode === "pleasure" ? idx + 1 : idx + 4;
+                const styleNumber = mode === "unhealthy" ? idx + 1 : idx + 4;
                 return (
                   <Box
                     key={styleNumber}

@@ -2,7 +2,6 @@ import { useState } from "react";
 import TeeterTotter from "../components/TeeterTotter/TeeterTotter";
 import styles from "./HomePage.module.css";
 import { Button, Image } from "@chakra-ui/react";
-import CreateGremlinModal from "../components/CreateGremlinModal/CreateGremlinModal";
 
 const HomePage = () => {
   const [isCreateGrem, setIsCreateGrem] = useState(false);

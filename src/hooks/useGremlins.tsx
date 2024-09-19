@@ -7,13 +7,14 @@ const useGremlins = () => {
   const [gremlins, setGremlins] = useState<Gremlin[]>([]);
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const userID = Number(localStorage.getItem("userID"));
 
   const updateGremlins = () => {
     setLoading(true);
-    const { request, cancel } = GremlinService.getGremlinsByUser(userID);
+    console.log("updateGremlins called");
+    const { request, cancel } = GremlinService.getGremlinsByUser();
     request
       .then((res) => {
+        console.log(res.data);
         setGremlins(res.data);
         setLoading(false);
       })

@@ -1,6 +1,8 @@
 // utils/auth.ts
 export const isAuthenticated = (): boolean => {
     const token = localStorage.getItem("token");
+    const username = localStorage.getItem("email");
+    if(username === "demo") return false;
     if (!token) return false;
   
     try {

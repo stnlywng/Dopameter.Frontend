@@ -30,11 +30,11 @@ import gremlinStyle5 from "/src/assets/goodgremlin/Blue.png";
 import gremlinStyle6 from "/src/assets/goodgremlin/Orange.png";
 import axiosInstance from "../../api/api-client";
 import { CanceledError } from "axios";
-import useGremlins from "../../hooks/useGremlins";
 
 const createGremlinSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }).default(""),
   kindOfGremlin: z.number().default(1),
+  pleasurePain: z.number().default(1),
   activityName: z
     .string()
     .min(1, { message: "Name is required" })
@@ -61,13 +61,16 @@ const CreateGremlinModal = ({
   const [useGremlinNameAsActivity, setUseGremlinNameAsActivity] =
     useState(false);
 
-  const [mode, setMode] = useState<"pleasure" | "pain">("pleasure"); // Mode toggle
+  const [mode, setMode] = useState<"unhealthy" | "healthy">("unhealthy"); // Mode toggle
+  const [pleasurePain, setPleasurePain] = useState<"pleasure" | "pain">(
+    "pleasure"
+  ); // pleasurePain toggle
   const [selectedStyle, setSelectedStyle] = useState(1); // Style toggle
 
   const {
     register: gremlinRegister,
     handleSubmit: handleGremlinSubmit,
-    formState: { errors: gremlinErrors, isValid: isGremlinValid },
+    formState: { isValid: isGremlinValid },
     watch,
     setValue,
     trigger,
@@ -89,11 +92,17 @@ const CreateGremlinModal = ({
     }
   };
 
-  const handleModeChange = (newMode: "pleasure" | "pain") => {
+  const handleModeChange = (newMode: "unhealthy" | "healthy") => {
     setMode(newMode);
-    const defaultStyle = newMode === "pleasure" ? 1 : 4;
+    const defaultStyle = newMode === "unhealthy" ? 1 : 4;
     setSelectedStyle(defaultStyle);
     setValue("kindOfGremlin", defaultStyle);
+  };
+
+  const handlePleasurePainChange = (newPleasurePain: "pleasure" | "pain") => {
+    setPleasurePain(newPleasurePain);
+    const pleasurePainNumber = newPleasurePain === "pleasure" ? 1 : 2;
+    setValue("pleasurePain", pleasurePainNumber);
   };
 
   const handleStyleSelect = (style: number) => {
@@ -105,12 +114,12 @@ const CreateGremlinModal = ({
     console.log("Gremlin created:", data);
 
     const controller = new AbortController();
-    const { name, kindOfGremlin, activityName, intensity } = data;
+    const { name, kindOfGremlin, pleasurePain, activityName, intensity } = data;
 
     axiosInstance
       .post(
         "/gremlin",
-        { name, kindOfGremlin, activityName, intensity },
+        { name, kindOfGremlin, pleasurePain, activityName, intensity },
         { signal: controller.signal }
       )
       .then((response) => {
@@ -127,7 +136,7 @@ const CreateGremlinModal = ({
 
   // Example color schemes for different styles
   const styleColors =
-    mode === "pleasure"
+    mode === "unhealthy"
       ? ["#93B1FF", "#137A74", "#FF8754"] // Example colors for pleasure
       : ["#CF5497", "#3993FF", "#FFC42D"]; // Example colors for pain
 
@@ -174,26 +183,52 @@ const CreateGremlinModal = ({
         {/* Pleasure or Pain Selection */}
         <Center mt={3} gap={0} mb={4}>
           <Button
-            colorScheme={mode === "pleasure" ? "purple" : "gray"}
+            colorScheme={pleasurePain === "pleasure" ? "purple" : "gray"}
             variant="solid"
             width="230px"
             fontSize="sm"
             height={"30px"}
             borderRightRadius={0}
-            onClick={() => handleModeChange("pleasure")}
+            onClick={() => handlePleasurePainChange("pleasure")}
           >
             Pleasure
           </Button>
           <Button
-            colorScheme={mode === "pain" ? "whatsapp" : "gray"}
+            colorScheme={pleasurePain === "pain" ? "whatsapp" : "gray"}
             variant="solid"
             width="230px"
             fontSize="sm"
             height={"30px"}
             borderLeftRadius={0}
-            onClick={() => handleModeChange("pain")}
+            onClick={() => handlePleasurePainChange("pain")}
           >
             Pain
+          </Button>
+        </Center>
+
+        {/* Healthy or Not Selection */}
+        <Center mt={3} gap={0} mb={4}>
+          <Button
+            colorScheme={mode === "unhealthy" ? "purple" : "gray"}
+            variant="solid"
+            width="230px"
+            fontSize="sm"
+            height={"30px"}
+            borderRightRadius={0}
+            onClick={() => handleModeChange("unhealthy")}
+          >
+            Unhealthy
+          </Button>
+          <Button
+            colorScheme={mode === "healthy" ? "whatsapp" : "gray"}
+            variant="solid"
+            width="230px"
+            fontSize="sm"
+            height={"30px"}
+            borderLeftRadius={0}
+            onClick={() => handleModeChange("healthy")}
+          >
+            Healthy
           </Button>
         </Center>
 
@@ -210,7 +245,7 @@ const CreateGremlinModal = ({
                 }
                 trigger("name");
               }}
-              onInput={(event) => {
+              onInput={() => {
                 if (useGremlinNameAsActivity) {
                   setValue("activityName", gremlinName);
                 }
@@ -273,7 +308,7 @@ const CreateGremlinModal = ({
               <Text
                 onClick={() =>
                   setSelectedStyle(
-                    mode === "pleasure"
+                    mode === "unhealthy"
                       ? Math.floor(Math.random() * 3) + 1
                       : Math.floor(Math.random() * 3) + 4
                   )
@@ -289,7 +324,7 @@ const CreateGremlinModal = ({
             </FormLabel>
             <Center gap={2}>
               {styleColors.map((color, idx) => {
-                const styleNumber = mode === "pleasure" ? idx + 1 : idx + 4;
+                const styleNumber = mode === "unhealthy" ? idx + 1 : idx + 4;
                 return (
                   <Box
                     key={styleNumber}

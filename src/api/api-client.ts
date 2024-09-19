@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an instance of axios with default configuration
 const axiosInstance = axios.create({
-  baseURL: 'https://localhost:7262/api', // Your backend base URL
+  baseURL: 'https://dopameterapi.azurewebsites.net/api/', // Your backend base URL
   headers: {
     'Content-Type': 'application/json',
     // Add any other headers you might need

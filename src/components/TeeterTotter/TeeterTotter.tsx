@@ -1,24 +1,24 @@
 import { motion } from "framer-motion";
 import styles from "./TeeterTotter.module.css";
-import { Box, Image, Text } from "@chakra-ui/react";
+import { Image, Text } from "@chakra-ui/react";
 import useGremlins from "../../hooks/useGremlins";
-import goodPinkGremlin_1 from "/src/assets/goodgremlin/Pink.png";
-import goodPinkGremlin_2 from "/src/assets/goodgremlin/Pink.png";
-import goodPinkGremlin_3 from "/src/assets/goodgremlin/Pink.png";
-import goodPinkGremlin_4 from "/src/assets/goodgremlin/Pink.png";
-import goodPinkGremlin_5 from "/src/assets/goodgremlin/Pink.png";
+import goodPinkGremlin_1 from "/src/assets/goodgremlin/goodPinkGremlin_1.png";
+import goodPinkGremlin_2 from "/src/assets/goodgremlin/goodPinkGremlin_2.png";
+import goodPinkGremlin_3 from "/src/assets/goodgremlin/goodPinkGremlin_3.png";
+import goodPinkGremlin_4 from "/src/assets/goodgremlin/goodPinkGremlin_4.png";
+import goodPinkGremlin_5 from "/src/assets/goodgremlin/goodPinkGremlin_5.png";
 
-import goodBlueGremlin_2 from "/src/assets/goodgremlin/Blue.png";
-import goodBlueGremlin_3 from "/src/assets/goodgremlin/Blue.png";
-import goodBlueGremlin_1 from "/src/assets/goodgremlin/Blue.png";
-import goodBlueGremlin_4 from "/src/assets/goodgremlin/Blue.png";
-import goodBlueGremlin_5 from "/src/assets/goodgremlin/Blue.png";
+import goodBlueGremlin_1 from "/src/assets/goodgremlin/goodBlueGremlin_1.png";
+import goodBlueGremlin_2 from "/src/assets/goodgremlin/goodBlueGremlin_2.png";
+import goodBlueGremlin_3 from "/src/assets/goodgremlin/goodBlueGremlin_3.png";
+import goodBlueGremlin_4 from "/src/assets/goodgremlin/goodBlueGremlin_4.png";
+import goodBlueGremlin_5 from "/src/assets/goodgremlin/goodBlueGremlin_5.png";
 
-import goodOrangeGremlin_1 from "/src/assets/goodgremlin/Orange.png";
-import goodOrangeGremlin_2 from "/src/assets/goodgremlin/Orange.png";
-import goodOrangeGremlin_3 from "/src/assets/goodgremlin/Orange.png";
-import goodOrangeGremlin_4 from "/src/assets/goodgremlin/Orange.png";
-import goodOrangeGremlin_5 from "/src/assets/goodgremlin/Orange.png";
+import goodOrangeGremlin_1 from "/src/assets/goodgremlin/goodOrangeGremlin_1.png";
+import goodOrangeGremlin_2 from "/src/assets/goodgremlin/goodOrangeGremlin_2.png";
+import goodOrangeGremlin_3 from "/src/assets/goodgremlin/goodOrangeGremlin_3.png";
+import goodOrangeGremlin_4 from "/src/assets/goodgremlin/goodOrangeGremlin_4.png";
+import goodOrangeGremlin_5 from "/src/assets/goodgremlin/goodOrangeGremlin_5.png";
 
 import badGreenGremlin_1 from "/src/assets/badgremlin/badGreenGremlin_1.png";
 import badGreenGremlin_2 from "/src/assets/badgremlin/badGreenGremlin_2.png";
@@ -40,9 +40,13 @@ import badOrangeGremlin_5 from "/src/assets/badgremlin/badOrangeGremlin_5.png";
 
 import defaultGremlin from "/src/assets/goodgremlin/Pink.png"; // Default image
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditGremlinModal from "../EditGremlinModal/EditGremlinModal";
 import CreateGremlinModal from "../CreateGremlinModal/CreateGremlinModal";
+import GremlinInfoBox, {
+  calculateGremlinWeight,
+} from "../GremlinInfoBox/GremlinInfoBox";
+import FeedModal from "../FeedModal/FeedModal";
 
 const imageMapping: { [style: number]: { [fatness: number]: string } } = {
   4: {
@@ -100,6 +104,21 @@ const getGremlinImage = (style: number, fatness: number) => {
   return imageMapping[style]?.[fatnessLevel] || defaultGremlin; // Fallback to default image
 };
 
+const calculateTilt = (
+  goodGremWeight: number,
+  badGremWeight: number,
+  leftOrRight: number
+) => {
+  const maxTilt = 11.8;
+  return leftOrRight > 0
+    ? leftOrRight *
+        maxTilt *
+        (goodGremWeight / (goodGremWeight + badGremWeight))
+    : leftOrRight *
+        maxTilt *
+        (badGremWeight / (goodGremWeight + badGremWeight));
+};
+
 interface TeeterTotterProps {
   isCreateGrem: boolean;
   setIsCreateGrem: (value: boolean) => void;
@@ -109,173 +128,292 @@ const TeeterTotter: React.FC<TeeterTotterProps> = ({
   isCreateGrem,
   setIsCreateGrem,
 }) => {
-  const [tilt, setTilt] = useState(0);
-  const { gremlins, error, isLoading, setGremlins, setError, updateGremlins } =
-    useGremlins();
+  const [tilt, setTilt] = useState<number>(0);
+  const { gremlins, updateGremlins } = useGremlins();
   const [hoveredGremlin, setHoveredGremlin] = useState<number>(-1);
   const [isEditGrem, setIsEditGrem] = useState(false);
+  const [isFeedGrem, setIsFeedGrem] = useState(false);
+  const [maxOfGremTypes, setMaxOfGremTypes] = useState(0);
+
+  const [goodGremsTotalWeight, setGoodGremsTotalWeight] = useState(0);
+  const [badGremsTotalWeight, setBadGremsTotalWeight] = useState(0);
+
+  useEffect(() => {
+    if (gremlins.length === 0) return; // Only calculate if gremlins exist
+
+    let totalGoodWeight = 0;
+    let totalBadWeight = 0;
+    let goodGremsCount = 0;
+    let badGremsCount = 0;
+
+    gremlins.forEach((gremlin) => {
+      let weight =
+        calculateGremlinWeight(gremlin.lastSetWeight, gremlin.lastFedDate) *
+        0.01;
+      weight *= gremlin.intensity;
+
+      if (gremlin.pleasurePain == 1) {
+        badGremsCount++;
+        totalBadWeight += weight;
+      } else {
+        goodGremsCount++;
+        totalGoodWeight += weight;
+      }
+    });
+
+    setMaxOfGremTypes(Math.max(goodGremsCount, badGremsCount));
+    setGoodGremsTotalWeight(totalGoodWeight);
+    setBadGremsTotalWeight(totalBadWeight);
+
+    // Calculate tilt only after weights are fully set
+    if (totalGoodWeight + totalBadWeight > 0) {
+      const newTilt =
+        totalGoodWeight >= totalBadWeight
+          ? calculateTilt(totalGoodWeight, totalBadWeight, 1)
+          : calculateTilt(totalGoodWeight, totalBadWeight, -1);
+
+      setTilt(newTilt);
+    }
+  }, [gremlins, setGoodGremsTotalWeight, setBadGremsTotalWeight]);
 
   var goodGremPosCount = 0;
   var badGremPosCount = 0;
 
   const calculateHeight = (intensity: number) => {
     const calculatedValue =
-      ((intensity / 1000) * 65 + 35) / (13 * (gremlins.length / 9));
+      ((intensity / 1000) * 65 + 35) / (13 * (maxOfGremTypes / 7));
     return calculatedValue > 12 ? "12vw" : `${calculatedValue}vw`;
   };
 
   return (
-    <div className={styles["teeter-totter-container"]}>
-      <div className={styles["ground"]}>
-        <Image
-          boxSize="100%"
-          objectFit="cover"
-          src="/src/assets/ground.jpg"
-          alt="Log Background"
-          objectPosition="bottom"
-        />
+    <>
+      <div className={styles["teeter-totter-container"]}>
+        <div className={styles["ground"]}>
+          <Image
+            boxSize="100%"
+            objectFit="cover"
+            src="/src/assets/ground.jpg"
+            alt="Log Background"
+            objectPosition="bottom"
+          />
+        </div>
+        <div className={styles["log"]}>
+          <Image
+            boxSize="140%"
+            objectFit="cover"
+            src="/src/assets/log.png"
+            alt="Log Background"
+            objectPosition="bottom"
+          />
+        </div>
+        <motion.div
+          className={styles["teeter-totter"]}
+          style={{
+            transformOrigin: "bottom",
+            height: "180px",
+            willChange: "transform",
+          }}
+          animate={{ rotate: tilt, scale: 1 }}
+          transition={{ type: "spring", stiffness: 30 }}
+          onMouseEnter={() => {
+            setTilt(0);
+          }}
+          onMouseLeave={() => {
+            if (goodGremsTotalWeight >= badGremsTotalWeight) {
+              setTilt(
+                calculateTilt(goodGremsTotalWeight, badGremsTotalWeight, 1)
+              );
+            } else {
+              setTilt(
+                calculateTilt(goodGremsTotalWeight, badGremsTotalWeight, -1)
+              );
+            }
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              height: "14px",
+              backgroundColor: "#555",
+              alignContent: "center",
+              position: "absolute",
+              bottom: "0",
+              display: "flex",
+              justifyContent: "space-between",
+              borderRadius: "10px",
+            }}
+          ></div>
+          {gremlins.map((currentGremlin, index) => (
+            <div
+              key={currentGremlin.gremlinID} // Ensure a unique key
+              className={styles["gremlin"]}
+              style={{
+                left:
+                  currentGremlin.pleasurePain <= 1
+                    ? `${
+                        (badGremPosCount++ * ((5.2 / maxOfGremTypes) * 140)) /
+                        22
+                      }vw`
+                    : undefined,
+                right:
+                  currentGremlin.pleasurePain >= 2
+                    ? `${
+                        (goodGremPosCount++ * ((5.4 / maxOfGremTypes) * 140)) /
+                        22
+                      }vw`
+                    : undefined,
+                height:
+                  currentGremlin.kindOfGremlin < 4
+                    ? calculateHeight(currentGremlin.intensity / 3.1)
+                    : calculateHeight(currentGremlin.intensity),
+                cursor: "pointer",
+                zIndex: 1000 - index,
+              }}
+              onMouseEnter={() => {
+                setHoveredGremlin(currentGremlin.gremlinID);
+                setTilt(0);
+              }}
+              onMouseLeave={() => {
+                if (!isEditGrem && !isFeedGrem) {
+                  setHoveredGremlin(-1);
+                }
+                if (goodGremsTotalWeight >= badGremsTotalWeight) {
+                  setTilt(
+                    calculateTilt(goodGremsTotalWeight, badGremsTotalWeight, 1)
+                  );
+                } else {
+                  setTilt(
+                    calculateTilt(goodGremsTotalWeight, badGremsTotalWeight, -1)
+                  );
+                }
+              }}
+            >
+              <Image
+                boxSize="100%"
+                objectFit="cover"
+                src={getGremlinImage(
+                  currentGremlin.kindOfGremlin,
+                  currentGremlin.intensity
+                )}
+                alt={currentGremlin.name}
+                objectPosition="bottom"
+                style={{
+                  transform:
+                    currentGremlin.pleasurePain <= 1 ? "scaleX(-1)" : undefined,
+                }}
+              />
+              {/* Bad Gremlin Name Tag */}
+              {hoveredGremlin === currentGremlin.gremlinID &&
+                currentGremlin.pleasurePain <= 1 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "115%", // Adjusted for vertical centering
+                      left: "52%",
+                      transform: "translate(-47%, 53%)", // Centers horizontally and moves the div based on its dimensions
+                      textAlign: "center", // Center the text within the div
+                    }}
+                  >
+                    <Text
+                      fontSize="xl"
+                      color="white"
+                      textShadow="
+                            -1px -1px 0 black,  /* Top-left shadow */
+                            1px -1px 0 black,   /* Top-right shadow */
+                            -1px 1px 0 black,   /* Bottom-left shadow */
+                            1px 1px 0 black     /* Bottom-right shadow */
+                        "
+                    >
+                      {currentGremlin.name}
+                    </Text>
+                  </div>
+                )}
+              {/* Good Gremlin Name Tag */}
+              {hoveredGremlin === currentGremlin.gremlinID &&
+                currentGremlin.pleasurePain >= 2 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "112%", // Adjusted for vertical centering
+                      left: "39.3%",
+                      transform: "translate(-45%, 55%)", // Centers horizontally and moves the div based on its dimensions
+                      textAlign: "center", // Center the text within the div
+                    }}
+                  >
+                    <Text
+                      fontSize="xl"
+                      color="white"
+                      textShadow="
+                            -1px -1px 0 black,  /* Top-left shadow */
+                            1px -1px 0 black,   /* Top-right shadow */
+                            -1px 1px 0 black,   /* Bottom-left shadow */
+                            1px 1px 0 black     /* Bottom-right shadow */
+                        "
+                    >
+                      {currentGremlin.name}
+                    </Text>
+                  </div>
+                )}
+              {/* Info Box */}
+              {hoveredGremlin === currentGremlin.gremlinID && (
+                <GremlinInfoBox
+                  currentGremlin={currentGremlin}
+                  setIsEditGrem={setIsEditGrem}
+                  setIsFeedGrem={setIsFeedGrem}
+                />
+              )}
+            </div>
+          ))}
+        </motion.div>
+        {isEditGrem && (
+          <EditGremlinModal
+            isEditGrem={isEditGrem}
+            gremlinID={hoveredGremlin}
+            setIsEditGrem={setIsEditGrem}
+            resetHoveredGremlin={() => {
+              setHoveredGremlin(-1);
+              updateGremlins();
+            }}
+          />
+        )}
+        {isFeedGrem && (
+          <FeedModal
+            isFeedGrem={isFeedGrem}
+            gremlinID={hoveredGremlin}
+            gremlinStyle={3}
+            setIsFeedGrem={setIsFeedGrem}
+            resetHoveredGremlin={() => {
+              setHoveredGremlin(-1);
+              updateGremlins();
+            }}
+          />
+        )}
+        {isCreateGrem && (
+          <CreateGremlinModal
+            isCreateGrem={isCreateGrem}
+            setIsCreateGrem={setIsCreateGrem}
+            updateGremlins={updateGremlins}
+          />
+        )}
       </div>
-      <div className={styles["log"]}>
-        <Image
-          boxSize="100%"
-          objectFit="cover"
-          src="/src/assets/log.png"
-          alt="Log Background"
-          objectPosition="bottom"
-        />
-      </div>
-      <motion.div
-        className={styles["teeter-totter"]}
-        style={{
-          transformOrigin: "bottom",
-          height: "180px",
-          willChange: "transform",
-        }}
-        animate={{ rotate: tilt, scale: 1 }}
-        transition={{ type: "spring", stiffness: 50 }}
+      <div
+        className={styles["hoverbox"]}
         onMouseEnter={() => {
           setTilt(0);
         }}
         onMouseLeave={() => {
-          setTilt(-8);
+          if (goodGremsTotalWeight >= badGremsTotalWeight) {
+            setTilt(
+              calculateTilt(goodGremsTotalWeight, badGremsTotalWeight, 1)
+            );
+          } else {
+            setTilt(
+              calculateTilt(goodGremsTotalWeight, badGremsTotalWeight, -1)
+            );
+          }
         }}
-      >
-        <div
-          style={{
-            width: "100%",
-            height: "14px",
-            backgroundColor: "#555",
-            alignContent: "center",
-            position: "absolute",
-            bottom: "0",
-            display: "flex",
-            justifyContent: "space-between",
-            borderRadius: "10px",
-          }}
-        ></div>
-        {gremlins.map((currentGremlin, index) => (
-          <div
-            key={currentGremlin.gremlinID} // Ensure a unique key
-            className={styles["gremlin"]}
-            style={{
-              left:
-                currentGremlin.kindOfGremlin < 4
-                  ? `${
-                      (badGremPosCount++ * ((7.5 / gremlins.length) * 140)) / 22
-                    }vw`
-                  : undefined,
-              right:
-                currentGremlin.kindOfGremlin >= 4
-                  ? `${
-                      (goodGremPosCount++ * ((7.5 / gremlins.length) * 140)) /
-                      22
-                    }vw`
-                  : undefined,
-              height: calculateHeight(currentGremlin.intensity),
-            }}
-            onMouseEnter={() => setHoveredGremlin(currentGremlin.gremlinID)} // Track gremlin on hover
-            onMouseLeave={() => {
-              if (!isEditGrem) {
-                setHoveredGremlin(-1);
-              }
-            }}
-            onMouseDown={() => setIsEditGrem(true)}
-          >
-            <Image
-              boxSize="100%"
-              objectFit="cover"
-              src={getGremlinImage(
-                currentGremlin.kindOfGremlin,
-                currentGremlin.intensity
-              )}
-              alt={currentGremlin.name}
-              objectPosition="bottom"
-              style={{
-                transform:
-                  currentGremlin.kindOfGremlin < 4 ? "scaleX(-1)" : undefined,
-              }}
-            />
-
-            {/* {hoveredGremlin === currentGremlin.gremlinID && (
-              <div style={{ position: "relative", bottom: "100%" }}>
-                <Text position="relative" bottom="30px" fontSize="xl">
-                  {currentGremlin.name}
-                </Text>
-              </div>
-            )} */}
-
-            {/* Show the details square if this gremlin is being hovered */}
-            {hoveredGremlin === currentGremlin.gremlinID && (
-              <Box
-                position="absolute"
-                left={
-                  currentGremlin.kindOfGremlin < 4
-                    ? `${(currentGremlin.intensity / 1000) * 110 + 75}px`
-                    : undefined
-                }
-                right={
-                  currentGremlin.kindOfGremlin >= 4
-                    ? `${(currentGremlin.intensity / 1000) * 110 + 75}px`
-                    : undefined
-                }
-                bottom="1px"
-                backgroundColor="black" // Set background to black
-                color="white" // Set text color to white
-                border="1px solid #ccc"
-                padding="10px"
-                boxShadow="lg"
-                borderRadius={5}
-                textAlign="left" // Ensure text is left-aligned
-                zIndex={10} // Ensure it appears above other content
-                minWidth={180}
-              >
-                <p>Name: {currentGremlin.name}</p>
-                <p>Activity: {currentGremlin.activityName}</p>
-                <p>Intensity: {currentGremlin.intensity}</p>
-              </Box>
-            )}
-          </div>
-        ))}
-      </motion.div>
-      {isEditGrem && (
-        <EditGremlinModal
-          isEditGrem={isEditGrem}
-          gremlinID={hoveredGremlin}
-          setIsEditGrem={setIsEditGrem}
-          resetHoveredGremlin={() => {
-            setHoveredGremlin(-1);
-            updateGremlins();
-          }}
-        />
-      )}
-      {isCreateGrem && (
-        <CreateGremlinModal
-          isCreateGrem={isCreateGrem}
-          setIsCreateGrem={setIsCreateGrem}
-          updateGremlins={updateGremlins}
-        />
-      )}
-    </div>
+      ></div>
+    </>
   );
 };
 

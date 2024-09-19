@@ -1,7 +1,6 @@
-import ApiTestComponent from "../components/ApiTestComponent";
 import styles from "./LandingPage.module.css"; // Create a CSS file for styles
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Image } from "@chakra-ui/react";
+import { Button, Image } from "@chakra-ui/react";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -15,9 +14,9 @@ const LandingPage = () => {
               boxSize="100%"
               objectFit="cover"
               src="/src/assets/background.png"
-              alt="Dan Abramov"
+              alt="background"
               opacity={1}
-              filter="brightness(.2)"
+              filter="brightness(.28)"
             />
           }
         </div>
@@ -51,7 +50,7 @@ const LandingPage = () => {
             borderRadius={12}
             borderWidth={2}
             background={"transparent"}
-            onClick={() => navigate("/info")}
+            onClick={() => navigate("/demo")}
             size={"lg"}
             ml={3}
             _hover={{
@@ -63,9 +62,6 @@ const LandingPage = () => {
           >
             See a Demo.
           </Button>
-        </div>
-        <div>
-          <ApiTestComponent />
         </div>
       </div>
       <div className={styles["footer"]}>
