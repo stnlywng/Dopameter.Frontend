@@ -164,7 +164,7 @@ const CreateGremlinModal = ({
       <ModalOverlay />
       <ModalContent bg="#333" width={"550px"} maxW={"550px"} padding={45}>
         <ModalCloseButton color="white" />
-        <Center mt={2}>
+        <Center mt={0}>
           <Image
             src={getGremlinImage(selectedStyle)}
             objectFit="cover"
@@ -180,57 +180,79 @@ const CreateGremlinModal = ({
           </Text>
         </Center>
 
-        {/* Pleasure or Pain Selection */}
-        <Center mt={3} gap={0} mb={4}>
-          <Button
-            colorScheme={pleasurePain === "pleasure" ? "purple" : "gray"}
-            variant="solid"
-            width="230px"
-            fontSize="sm"
-            height={"30px"}
-            borderRightRadius={0}
-            onClick={() => handlePleasurePainChange("pleasure")}
-          >
-            Pleasure
-          </Button>
-          <Button
-            colorScheme={pleasurePain === "pain" ? "whatsapp" : "gray"}
-            variant="solid"
-            width="230px"
-            fontSize="sm"
-            height={"30px"}
-            borderLeftRadius={0}
-            onClick={() => handlePleasurePainChange("pain")}
-          >
-            Pain
-          </Button>
-        </Center>
-
         {/* Healthy or Not Selection */}
-        <Center mt={3} gap={0} mb={4}>
-          <Button
-            colorScheme={mode === "unhealthy" ? "purple" : "gray"}
-            variant="solid"
-            width="230px"
-            fontSize="sm"
-            height={"30px"}
-            borderRightRadius={0}
-            onClick={() => handleModeChange("unhealthy")}
+        <FormControl mt={4}>
+          <FormLabel
+            color="white"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            w="100%"
           >
-            Unhealthy
-          </Button>
-          <Button
-            colorScheme={mode === "healthy" ? "whatsapp" : "gray"}
-            variant="solid"
-            width="230px"
-            fontSize="sm"
-            height={"30px"}
-            borderLeftRadius={0}
-            onClick={() => handleModeChange("healthy")}
+            Pleasure or Pain
+          </FormLabel>
+          <Center mt={3} gap={0} mb={0}>
+            <Button
+              colorScheme={mode === "unhealthy" ? "purple" : "gray"}
+              variant="solid"
+              width="230px"
+              fontSize="sm"
+              height={"30px"}
+              borderRightRadius={0}
+              onClick={() => handleModeChange("unhealthy")}
+            >
+              Unhealthy
+            </Button>
+            <Button
+              colorScheme={mode === "healthy" ? "whatsapp" : "gray"}
+              variant="solid"
+              width="230px"
+              fontSize="sm"
+              height={"30px"}
+              borderLeftRadius={0}
+              onClick={() => handleModeChange("healthy")}
+            >
+              Healthy
+            </Button>
+          </Center>
+        </FormControl>
+
+        {/* Pleasure or Pain Selection */}
+        <FormControl mt={4}>
+          <FormLabel
+            color="white"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            w="100%"
           >
-            Healthy
-          </Button>
-        </Center>
+            Pleasure or Pain
+          </FormLabel>
+          <Center mt={0} gap={0} mb={4}>
+            <Button
+              colorScheme={pleasurePain === "pleasure" ? "purple" : "gray"}
+              variant="solid"
+              width="230px"
+              fontSize="sm"
+              height={"30px"}
+              borderRightRadius={0}
+              onClick={() => handlePleasurePainChange("pleasure")}
+            >
+              Pleasure
+            </Button>
+            <Button
+              colorScheme={pleasurePain === "pain" ? "whatsapp" : "gray"}
+              variant="solid"
+              width="230px"
+              fontSize="sm"
+              height={"30px"}
+              borderLeftRadius={0}
+              onClick={() => handlePleasurePainChange("pain")}
+            >
+              Pain
+            </Button>
+          </Center>
+        </FormControl>
 
         <form onSubmit={handleGremlinSubmit(handleCreate)}>
           {/* Gremlin Name */}

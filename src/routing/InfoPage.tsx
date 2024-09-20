@@ -15,25 +15,37 @@ const steps: Step[] = [
     image: "/src/assets/ice_pic.webp",
     title: "Step 1 - The Pleasure-Pain Balance",
     content:
-      "One of the most exciting discoveries in modern neuroscience is the fact that it's that the same part of our brain that processes pleasure also happens to process pain. They are co-located and work like opposite sides of a balance—we picture this as a teeter-totter with one side for pleasure and one for pain. When we do something that is pleasurable (releases dopamine), we push down on the pleasure side of our mental balance. And then likewise, when we do something effortful, enduring, or difficult, we add weight to the pain side of the balance.",
+      "Neuroscience has discovered that the same part of the brain processes both pleasure and pain like two sides of a seesaw (pleasure and pain work like opposite sides of a balance). When we do something pleasurable (which releases dopamine), it tips the balance toward pleasure. On the other hand, effortful or difficult activities shift it toward pain.",
   },
   {
     image: "/src/assets/ice_mood.jpg",
     title: "Step 2 - Leveling the Balance",
     content:
-      'Our pleasure-pain balance earnestly desires to be levelled to reach a state called homeostasis, and it does so by creating and applying "gremlins" to the opposite side of our balance as we undergo experiences. The more intense the experience (whether it be on the pleasure or struggle/pain side), the more gremlins are created and hop on the opposite side of the balance to stay levelled.',
+      "The brain always tries to keep the balance level, a state called homeostasis. It does this by creating mental “gremlins” that add weight to the opposite side of the balance. The stronger the experience (whether pleasure or pain), the more gremlins are created to balance things out.",
   },
   {
     image: "/src/assets/ice_spice.jpeg",
     title: "Step 3 - Addiction",
     content:
-      'The issue occurs when we have intense and overly-stimulating experiences such as indulging in things like drugs, porn, social media, etc. We push on the pleasure side too hard and too sporadically, consequently calling the production of a heavy gremlin to try to level things out in the moment. But once the experience is over, the newly created gremlins remain and in effect tip the balance the opposing way as a new "resting" state. This will make the person feel sad and low (as they are mentally tilted towards the pain side), and then consequently hold a craving to intensely push down on the pleasure side of the balance one more (potentially leading to a spiral of addiction that only worsens).',
+      "The problem arises when we overindulge in intense pleasures like drugs, porn, or social media. This pushes the pleasure side down hard, causing too many gremlins to appear. Once the pleasure fades, the gremlins remain, tipping the balance toward pain (as we are no longer participating in the experience which intensely pressed on the pleasure side of the balance). This leaves a person feeling low and craving more pleasure, potentially leading to a cycle of addiction.",
   },
   {
     image: "/src/assets/ice_tng.jpeg",
     title: "Step 4 - Recovery",
     content:
-      "The main focus of recovery is to starve the gremlins (not feed into them), and from that restore homeostasis. This will look like abstaining from one's drug of choice, and looking to healthier and more balanced forms of dopamine. It usually takes 4 weeks for a gremlin to eventually dissipate.",
+      "Recovery focuses on starving the gremlins by avoiding the addictive behavior. This helps restore balance and homeostasis. It typically takes about four weeks for gremlins to fade away and for the balance to return to normal.",
+  },
+  {
+    image: "/src/assets/ice_amur.jpg",
+    title: "Step 5 - Dopameter",
+    content:
+      'Dopameter is a web app designed to help you visualize and track your mental balance by managing "gremlins," which represent both healthy and unhealthy activities that impact your pleasure-pain balance. Each gremlin affects your mental state, contributing either to the pleasure or pain side of the balance. By keeping track of your gremlins, Dopameter helps you understand how your habits influence your overall well-being, providing a clear picture of why you feel the way you do. You can see the effects of both healthy, balanced actions and the lingering impact of overstimulation, and make informed decisions about how to restore equilibrium.',
+  },
+  {
+    image: "/src/assets/ice_wings.webp",
+    title: "Step 6 - Gremlins",
+    content:
+      'Gremlins are created based on your activities—whether they\'re healthy and graceful pleasure-pain experiences, or potentially harmful and overly-intense pleasure-pain experiences. Each gremlin has two key attributes: intensity and weight. Intensity reflects how strong the experience was, while weight determines how much it currently impacts your balance. Over time, a gremlin’s weight decreases as long as you don’t "feed" it, meaning you don’t engage in the associated activity. If you do feed a specific gremlin once again, you will have the option to feed it once more! After four weeks of no activity, the gremlin’s weight drops to zero, no longer affecting your balance.',
   },
 ];
 
