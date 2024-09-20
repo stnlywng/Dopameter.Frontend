@@ -232,7 +232,7 @@ const EditGremlinModal = ({
             alignItems="center"
             w="100%"
           >
-            Pleasure or Pain
+            Healthy or Unhealthy
           </FormLabel>
           <Center mt={3} gap={0} mb={0}>
             <Button
