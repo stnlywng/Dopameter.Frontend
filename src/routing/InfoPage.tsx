@@ -139,7 +139,7 @@ const InfoPage = () => {
             />
             <div className={styles["info-content-text"]}>
               <Text
-                fontSize="4xl"
+                fontSize="2.3vw"
                 fontWeight="bold"
                 mb={3}
                 color={"black"}
@@ -148,7 +148,7 @@ const InfoPage = () => {
                 {steps[activeStep].title}
               </Text>
               <Text
-                fontSize="xl"
+                fontSize="1.2vw"
                 color={"black"}
                 textAlign={"left"}
                 whiteSpace="pre-line"
