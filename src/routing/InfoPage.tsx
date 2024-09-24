@@ -29,7 +29,7 @@ const steps: Step[] = [
       "The brain always tries to keep the balance level, a state called homeostasis. It does this by creating mental “gremlins” that add weight to the opposite side of the balance. The stronger the experience (whether pleasure or pain), the more gremlins are created to balance things out.",
   },
   {
-    image: "/src/assets/ice_grah.webp",
+    image: "/src/assets/ice_spice.jpeg",
     title: "Step 3 - Addiction",
     content:
       "The problem arises when we overindulge in intense pleasures like drugs, porn, or social media. This pushes the pleasure side down hard, causing too many gremlins to appear. Once the pleasure fades, the gremlins remain, tipping the balance toward pain (as we are no longer participating in the experience which intensely pressed on the pleasure side of the balance). This leaves a person feeling low and craving more pleasure, potentially leading to a cycle of addiction.",
