@@ -1,6 +1,9 @@
 import { useState } from "react";
 import styles from "./InfoPage.module.css";
 import { Button, Circle, Flex, Image, Text } from "@chakra-ui/react";
+import Lottie from "lottie-react";
+import animationData from "../assets/B_Blue.json";
+import animationData1 from "../assets/G_Pink.json";
 
 // Define a type for the step data
 type Step = {
@@ -129,13 +132,26 @@ const InfoPage = () => {
               alignItems: "center",
             }}
           >
-            <Image
+            {/* <Image
               boxSize="30%"
               objectFit="contain"
               src={steps[activeStep].image}
               alt="Sky"
               height={400}
               opacity={1}
+            /> */}
+            {/* <Box boxSize="30%" objectFit="contain" height={400}>
+              <Lottie animationData={animationData} loop={true} />
+            </Box> */}
+            <Lottie
+              animationData={animationData1}
+              loop={true}
+              size={400}
+              style={{
+                width: "400px",
+                height: "400px",
+                transform: "scaleX(-1)",
+              }}
             />
             <div className={styles["info-content-text"]}>
               <Text
