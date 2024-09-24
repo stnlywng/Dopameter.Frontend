@@ -48,6 +48,11 @@ import GremlinInfoBox, {
 } from "../GremlinInfoBox/GremlinInfoBox";
 import FeedModal from "../FeedModal/FeedModal";
 
+import Lottie from "lottie-react";
+
+// Import your animation JSON
+import animationData from "../../assets/B_Blue.json";
+
 const imageMapping: { [style: number]: { [fatness: number]: string } } = {
   4: {
     // Good Pink Gremlin
@@ -290,18 +295,27 @@ const TeeterTotter: React.FC<TeeterTotterProps> = ({
             >
               <Image
                 boxSize="100%"
-                objectFit="cover"
                 src={getGremlinImage(
                   currentGremlin.kindOfGremlin,
                   currentGremlin.intensity
                 )}
                 alt={currentGremlin.name}
-                objectPosition="bottom"
                 style={{
                   transform:
                     currentGremlin.pleasurePain <= 1 ? "scaleX(-1)" : undefined,
                 }}
               />
+              {/* <Lottie
+                animationData={animationData}
+                loop={true}
+                size={400}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  transform:
+                    currentGremlin.pleasurePain <= 1 ? "scaleX(-1)" : undefined,
+                }}
+              /> */}
               {/* Bad Gremlin Name Tag */}
               {hoveredGremlin === currentGremlin.gremlinID &&
                 currentGremlin.pleasurePain <= 1 && (
