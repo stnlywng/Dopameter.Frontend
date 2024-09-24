@@ -62,16 +62,6 @@
     color: white; /* Make sure text is visible over the background */
 }
 
-.info-content-image {
-    display: "flex";
-    justify-content: "center";
-    align-items: "center";
-    width: 100%;
-    position: relative;
-    text-align: center;
-    color: white;
-}
-
 .info-content-text {
     display: "flex";
     justify-content: "center";
