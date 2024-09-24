@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./InfoPage.module.css";
 import { Button, Circle, Flex, Image, Text } from "@chakra-ui/react";
 import Lottie from "lottie-react";
-import animationData from "../assets/B_Blue.json";
+// import animationData from "../assets/B_Blue.json";
 import animationData1 from "../assets/G_Pink.json";
 
 // Define a type for the step data
