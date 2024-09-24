@@ -18,10 +18,11 @@ export const calculateGremlinWeight = (
 
   // Get today's date
   const today = new Date();
-
   // Calculate the difference in time (milliseconds) and convert it to days
-  const differenceInTime = today.getTime() - fedDate.getTime();
-  const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+  const differenceInTime = today.getTime() - fedDate.getTime() - 1;
+
+  const differenceInDays =
+    Math.floor(differenceInTime / (1000 * 3600 * 24)) + 1;
 
   // Apply the formula: (lastSetWeight / 28) * differenceInDays
   const result = (lastSetWeight / 28) * (28 - differenceInDays);
