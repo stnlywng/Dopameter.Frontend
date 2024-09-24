@@ -48,10 +48,8 @@ import GremlinInfoBox, {
 } from "../GremlinInfoBox/GremlinInfoBox";
 import FeedModal from "../FeedModal/FeedModal";
 
-import Lottie from "lottie-react";
-
-// Import your animation JSON
-import animationData from "../../assets/B_Blue.json";
+// import Lottie from "lottie-react";
+// import animationData from "../../assets/B_Blue.json";
 
 const imageMapping: { [style: number]: { [fatness: number]: string } } = {
   4: {
