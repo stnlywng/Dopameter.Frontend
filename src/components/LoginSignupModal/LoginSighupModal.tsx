@@ -58,6 +58,7 @@ const LoginSighupModal = () => {
   const navigate = useNavigate(); // For redirecting
 
   const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   // Login form handling
   const {
@@ -111,6 +112,7 @@ const LoginSighupModal = () => {
         if (err instanceof CanceledError) return;
         console.error("Login error:", err.message);
         setLoading(false);
+        setError(err.message);
       });
     return () => controller.abort();
   };
@@ -354,6 +356,13 @@ const LoginSighupModal = () => {
             >
               {isLoading ? "Loading..." : isLogin ? "Login" : "Sign Up"}
             </Button>
+            <Center>
+              {error && (
+                <Text color="red.500" fontSize="sm">
+                  Login Invalid. Please try again.
+                </Text>
+              )}
+            </Center>
           </form>
 
           <Center>{renderToggleText()}</Center>
