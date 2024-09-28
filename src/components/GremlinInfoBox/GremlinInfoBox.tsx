@@ -6,6 +6,7 @@ interface GremlinInfoBoxProps {
   currentGremlin: Gremlin;
   setIsEditGrem: (value: boolean) => void;
   setIsFeedGrem: (value: boolean) => void;
+  setIsDelGrem: (value: boolean) => void;
 }
 
 export const calculateGremlinWeight = (
@@ -34,6 +35,7 @@ const GremlinInfoBox = ({
   currentGremlin,
   setIsEditGrem,
   setIsFeedGrem,
+  setIsDelGrem,
 }: GremlinInfoBoxProps) => {
   return (
     <Box
@@ -84,9 +86,9 @@ const GremlinInfoBox = ({
             borderColor: "white",
           }}
           size={"sm"}
-          onClick={() => setIsEditGrem(true)}
+          onClick={() => setIsFeedGrem(true)}
         >
-          Edit
+          Feed
         </Button>
       </div>
       <h3 style={{ fontSize: "14px", paddingBottom: "0px" }}>Activity</h3>
@@ -138,15 +140,29 @@ const GremlinInfoBox = ({
       <Button
         borderRadius={10}
         backgroundColor="#b3c8ff"
-        onClick={() => setIsFeedGrem(true)}
+        onClick={() => setIsEditGrem(true)}
         _hover={{
           backgroundColor: "#93B1FF",
         }}
         size={"md"}
         width={"100%"}
-        height={"44px"}
+        height={"34px"}
       >
-        Feed
+        Edit
+      </Button>
+      <Button
+        borderRadius={10}
+        backgroundColor="#ff7d93"
+        onClick={() => setIsDelGrem(true)}
+        _hover={{
+          backgroundColor: "#d43f58",
+        }}
+        size={"md"}
+        width={"100%"}
+        height={"34px"}
+        marginTop={"6px"}
+      >
+        Delete
       </Button>
     </Box>
   );

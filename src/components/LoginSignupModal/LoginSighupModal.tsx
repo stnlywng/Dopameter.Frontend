@@ -57,6 +57,8 @@ const LoginSighupModal = () => {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate(); // For redirecting
 
+  const [isLoading, setLoading] = useState(false);
+
   // Login form handling
   const {
     register: loginRegister,
@@ -81,6 +83,7 @@ const LoginSighupModal = () => {
     const controller = new AbortController();
     const { username, password } = data;
 
+    setLoading(true);
     axiosInstance
       .post<AuthResponse>(
         "/login",
@@ -99,6 +102,7 @@ const LoginSighupModal = () => {
         // Redirect to a protected page after successful login
         setLoginOpen(false);
         navigate("/home");
+        setLoading(false);
 
         // Optionally, you can also set these values in your state/context
         console.log("Login successful:", response.data);
@@ -106,6 +110,7 @@ const LoginSighupModal = () => {
       .catch((err) => {
         if (err instanceof CanceledError) return;
         console.error("Login error:", err.message);
+        setLoading(false);
       });
     return () => controller.abort();
   };
@@ -343,9 +348,11 @@ const LoginSighupModal = () => {
               mx="auto"
               mt={7}
               type="submit"
-              isDisabled={!isLogin ? !isSignupValid : !isLoginValid}
+              isDisabled={
+                isLoading || (!isLogin ? !isSignupValid : !isLoginValid)
+              }
             >
-              {isLogin ? "Login" : "Sign Up"}
+              {isLoading ? "Loading..." : isLogin ? "Login" : "Sign Up"}
             </Button>
           </form>
 

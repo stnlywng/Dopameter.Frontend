@@ -174,7 +174,7 @@ const CreateGremlinModal = ({
             height={153}
           />
         </Center>
-        <Center pt={0} pb={2}>
+        <Center pt={0} pb={0}>
           <Text fontSize="xl" fontWeight="bold" color="white">
             Add Gremlin
           </Text>

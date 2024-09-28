@@ -47,6 +47,7 @@ import GremlinInfoBox, {
   calculateGremlinWeight,
 } from "../GremlinInfoBox/GremlinInfoBox";
 import FeedModal from "../FeedModal/FeedModal";
+import DeleteModal from "../DeleteGremlinModal/DeleteModal";
 
 // import Lottie from "lottie-react";
 // import animationData from "../../assets/B_Blue.json";
@@ -134,8 +135,10 @@ const TeeterTotter: React.FC<TeeterTotterProps> = ({
   const [tilt, setTilt] = useState<number>(0);
   const { gremlins, updateGremlins } = useGremlins();
   const [hoveredGremlin, setHoveredGremlin] = useState<number>(-1);
+  const [hoveredGremlinName, setHoveredGremlinName] = useState<string>("");
   const [isEditGrem, setIsEditGrem] = useState(false);
   const [isFeedGrem, setIsFeedGrem] = useState(false);
+  const [isDelGrem, setIsDelGrem] = useState(false);
   const [maxOfGremTypes, setMaxOfGremTypes] = useState(0);
 
   const [goodGremsTotalWeight, setGoodGremsTotalWeight] = useState(0);
@@ -274,10 +277,11 @@ const TeeterTotter: React.FC<TeeterTotterProps> = ({
               }}
               onMouseEnter={() => {
                 setHoveredGremlin(currentGremlin.gremlinID);
+                setHoveredGremlinName(currentGremlin.name);
                 setTilt(0);
               }}
               onMouseLeave={() => {
-                if (!isEditGrem && !isFeedGrem) {
+                if (!isEditGrem && !isFeedGrem && !isDelGrem) {
                   setHoveredGremlin(-1);
                 }
                 if (goodGremsTotalWeight >= badGremsTotalWeight) {
@@ -372,6 +376,7 @@ const TeeterTotter: React.FC<TeeterTotterProps> = ({
                   currentGremlin={currentGremlin}
                   setIsEditGrem={setIsEditGrem}
                   setIsFeedGrem={setIsFeedGrem}
+                  setIsDelGrem={setIsDelGrem}
                 />
               )}
             </div>
@@ -405,6 +410,19 @@ const TeeterTotter: React.FC<TeeterTotterProps> = ({
             isCreateGrem={isCreateGrem}
             setIsCreateGrem={setIsCreateGrem}
             updateGremlins={updateGremlins}
+          />
+        )}
+        {isDelGrem && (
+          <DeleteModal
+            isDelGremlin={isDelGrem}
+            gremlinID={hoveredGremlin}
+            gremlinStyle={3}
+            gremlinName={hoveredGremlinName}
+            setIsDelGremlin={setIsDelGrem}
+            resetHoveredGremlin={() => {
+              setHoveredGremlin(-1);
+              updateGremlins();
+            }}
           />
         )}
       </div>

@@ -2,12 +2,18 @@ import { useState } from "react";
 import styles from "./InfoPage.module.css";
 import { Button, Circle, Flex, Image, Text } from "@chakra-ui/react";
 import Lottie from "lottie-react";
-// import animationData from "../assets/B_Blue.json";
-import animationData1 from "../assets/G_Pink.json";
 
-// Define a type for the step data
+// Import the Lottie animation files
+import animationData1 from "../assets/Slide1_Animation.json";
+import animationData2 from "../assets/Slide2_Animation.json";
+import animationData3 from "../assets/G_Pink.json";
+import animationData4 from "../assets/G_Pink.json";
+import animationData5 from "../assets/G_Pink.json";
+import animationData6 from "../assets/B_Blue.json";
+
+// Update Step type to hold animation data instead of image path
 type Step = {
-  image: string;
+  animationData: object;
   title: string;
   content: string;
 };
@@ -15,37 +21,37 @@ type Step = {
 // Steps data array
 const steps: Step[] = [
   {
-    image: "/src/assets/ice_pic.webp",
+    animationData: animationData1,
     title: "Step 1 - The Pleasure-Pain Balance",
     content:
       "Neuroscience has discovered that the same part of the brain processes both pleasure and pain like two sides of a seesaw (pleasure and pain work like opposite sides of a balance). When we do something pleasurable (which releases dopamine), it tips the balance toward pleasure. On the other hand, effortful or difficult activities shift it toward pain.",
   },
   {
-    image: "/src/assets/ice_mood.jpg",
+    animationData: animationData2,
     title: "Step 2 - Leveling the Balance",
     content:
       "The brain always tries to keep the balance level, a state called homeostasis. It does this by creating mental “gremlins” that add weight to the opposite side of the balance. The stronger the experience (whether pleasure or pain), the more gremlins are created to balance things out.",
   },
   {
-    image: "/src/assets/ice_spice.jpeg",
+    animationData: animationData3,
     title: "Step 3 - Addiction",
     content:
       "The problem arises when we overindulge in intense pleasures like drugs, porn, or social media. This pushes the pleasure side down hard, causing too many gremlins to appear. Once the pleasure fades, the gremlins remain, tipping the balance toward pain (as we are no longer participating in the experience which intensely pressed on the pleasure side of the balance). This leaves a person feeling low and craving more pleasure, potentially leading to a cycle of addiction.",
   },
   {
-    image: "/src/assets/ice_tng.jpeg",
+    animationData: animationData4,
     title: "Step 4 - Recovery",
     content:
       "Recovery focuses on starving the gremlins by avoiding the addictive behavior. This helps restore balance and homeostasis. It typically takes about four weeks for gremlins to fade away and for the balance to return to normal.",
   },
   {
-    image: "/src/assets/ice_amur.jpg",
+    animationData: animationData5,
     title: "Step 5 - Dopameter",
     content:
       'Dopameter is a web app designed to help you visualize and track your mental balance by managing "gremlins," which represent both healthy and unhealthy activities that impact your pleasure-pain balance. Each gremlin affects your mental state, contributing either to the pleasure or pain side of the balance. By keeping track of your gremlins, Dopameter helps you understand how your habits influence your overall well-being, providing a clear picture of why you feel the way you do. You can see the effects of both healthy, balanced actions and the lingering impact of overstimulation, and make informed decisions about how to restore equilibrium.',
   },
   {
-    image: "/src/assets/ice_wings.webp",
+    animationData: animationData6,
     title: "Step 6 - Gremlins",
     content:
       'Gremlins are created based on your activities—whether they\'re healthy and graceful pleasure-pain experiences, or potentially harmful and overly-intense pleasure-pain experiences. Each gremlin has two key attributes: intensity and weight. Intensity reflects how strong the experience was, while weight determines how much it currently impacts your balance. Over time, a gremlin’s weight decreases as long as you don’t "feed" it, meaning you don’t engage in the associated activity. If you do feed a specific gremlin once again, you will have the option to feed it once more! After four weeks of no activity, the gremlin’s weight drops to zero, no longer affecting your balance.',
@@ -144,13 +150,12 @@ const InfoPage = () => {
               <Lottie animationData={animationData} loop={true} />
             </Box> */}
             <Lottie
-              animationData={animationData1}
+              animationData={steps[activeStep].animationData}
               loop={true}
-              size={400}
               style={{
                 width: "400px",
                 height: "400px",
-                transform: "scaleX(-1)",
+                transform: "scaleX(1)",
               }}
             />
             <div className={styles["info-content-text"]}>
@@ -164,7 +169,7 @@ const InfoPage = () => {
                 {steps[activeStep].title}
               </Text>
               <Text
-                fontSize="1.2vw"
+                fontSize="1.36vw"
                 color={"black"}
                 textAlign={"left"}
                 whiteSpace="pre-line"
@@ -179,7 +184,7 @@ const InfoPage = () => {
             {steps.map((_, index) => (
               <Circle
                 key={index}
-                size="12px"
+                size="9px"
                 bg={activeStep === index ? "blue.500" : "gray.300"}
                 mx={1}
                 cursor="pointer"
