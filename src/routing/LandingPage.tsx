@@ -1,9 +1,26 @@
 import styles from "./LandingPage.module.css"; // Create a CSS file for styles
 import { useNavigate } from "react-router-dom";
 import { Button, Image } from "@chakra-ui/react";
+import { useEffect } from "react";
+import axiosInstance from "../api/api-client";
+import { CanceledError } from "axios";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    axiosInstance
+      .get("/health", { signal: controller.signal })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        console.error("API health check error:", err.message);
+      });
+    return () => controller.abort();
+  }, []);
 
   return (
     <>
