@@ -397,7 +397,6 @@ const TeeterTotter: React.FC<TeeterTotterProps> = ({
           <FeedModal
             isFeedGrem={isFeedGrem}
             gremlinID={hoveredGremlin}
-            gremlinStyle={3}
             setIsFeedGrem={setIsFeedGrem}
             resetHoveredGremlin={() => {
               setHoveredGremlin(-1);

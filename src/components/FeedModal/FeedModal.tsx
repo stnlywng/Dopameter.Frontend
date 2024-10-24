@@ -14,14 +14,16 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axiosInstance from "../../api/api-client";
 import useGremlins from "../../hooks/useGremlins";
 import { CanceledError } from "axios";
 import Lottie from "lottie-react";
-import eatingAnimation from "../../assets/Slide6_Animation_Blue-Eating.json";
+import eatingAnimationBad from "../../assets/B_Blue_Eating.json";
+import eatingAnimationGood from "../../assets/G_Pink_Eating.json";
+import GremlinService from "../../api/gremlinService";
 
 const feedGremlinSchema = z.object({
   percentFed: z.number().min(1).max(100).default(50),
@@ -32,7 +34,6 @@ type FeedGremlinData = z.infer<typeof feedGremlinSchema>;
 interface FeedModalProps {
   isFeedGrem: boolean;
   gremlinID: number;
-  gremlinStyle: number;
   setIsFeedGrem: (value: boolean) => void;
   resetHoveredGremlin: () => void;
 }
@@ -46,6 +47,7 @@ const FeedModal = ({
   const [sliderValue, setSliderValue] = useState(50);
   const [showTooltip, setShowTooltip] = React.useState(false);
   const { updateGremlins } = useGremlins();
+  const [gremlinType, setGremlinType] = useState(1);
 
   const { handleSubmit: handleFeedSubmit, setValue } = useForm<FeedGremlinData>(
     {
@@ -53,6 +55,21 @@ const FeedModal = ({
       mode: "onChange",
     }
   );
+
+  // get gremlin style
+  useEffect(() => {
+    const { request, cancel } = GremlinService.getGremlinById(gremlinID);
+
+    request
+      .then((res) => {
+        setGremlinType(res.data.kindOfGremlin);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+      });
+
+    return () => cancel();
+  }, []);
 
   const handleFeed = (data: FeedGremlinData) => {
     console.log("Gremlin Fed:", data);
@@ -87,11 +104,13 @@ const FeedModal = ({
         <ModalCloseButton color="white" />
         <Center>
           <Lottie
-            animationData={eatingAnimation}
+            animationData={
+              gremlinType < 4 ? eatingAnimationBad : eatingAnimationGood
+            }
             loop={true}
             style={{
               width: "230px",
-              height: "230px",
+              height: gremlinType < 4 ? "160px" : "200px",
               transform: "scaleX(1)",
             }}
           />
