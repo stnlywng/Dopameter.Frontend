@@ -6,10 +6,10 @@ import Lottie from "lottie-react";
 // Import the Lottie animation files
 import animationData1 from "../assets/Slide1_Animation.json";
 import animationData2 from "../assets/Slide2_Animation.json";
-import animationData3 from "../assets/G_Pink.json";
-import animationData4 from "../assets/G_Pink.json";
+import animationData3 from "../assets/Slide3_Animation.json";
+import animationData4 from "../assets/Slide4_Animation.json";
 import animationData5 from "../assets/G_Pink.json";
-import animationData6 from "../assets/B_Blue.json";
+import animationData6 from "../assets/Slide6_Animation_Blue-Eating.json";
 
 // Update Step type to hold animation data instead of image path
 type Step = {

@@ -1,5 +1,6 @@
 import {
   Button,
+  Center,
   FormControl,
   FormLabel,
   Modal,
@@ -19,6 +20,8 @@ import { z } from "zod";
 import axiosInstance from "../../api/api-client";
 import useGremlins from "../../hooks/useGremlins";
 import { CanceledError } from "axios";
+import Lottie from "lottie-react";
+import eatingAnimation from "../../assets/Slide6_Animation_Blue-Eating.json";
 
 const feedGremlinSchema = z.object({
   percentFed: z.number().min(1).max(100).default(50),
@@ -82,6 +85,17 @@ const FeedModal = ({
       <ModalOverlay opacity={90} />
       <ModalContent bg="#333" width={"550px"} maxW={"550px"} padding={45}>
         <ModalCloseButton color="white" />
+        <Center>
+          <Lottie
+            animationData={eatingAnimation}
+            loop={true}
+            style={{
+              width: "230px",
+              height: "230px",
+              transform: "scaleX(1)",
+            }}
+          />
+        </Center>
         <form onSubmit={handleFeedSubmit(handleFeed)}>
           <FormControl mt={4}>
             <FormLabel color="white">Feed Percentage %</FormLabel>
