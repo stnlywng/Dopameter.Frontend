@@ -1,56 +1,28 @@
-.landing-page {
-    display: flex;
-    justify-content: center;  /* Horizontally centers content */
-    height: 100vh;   
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    overflow-y: hidden;
-  }
-  
-  
-.background-animation {
-    position: absolute;
-    height: 100%;
-    width: 100%;
+.lottie-bg{
+    /* position: absolute;
+    top: 50px;
+    height: 100%;*/
+    /* width: 100vh; */
     background-size: cover;
+    /* margin: auto; */
     justify-content: center;  /* Horizontally centers content */
     overflow: hidden;
     display: flex;
-}
-  
-@keyframes moveBackground {
-    0% { background-position: 0 0; }
-    100% { background-position: 100% 0; }
-}
-  
-.content {
-    position: relative;
-    width: 1000px;
-    z-index: 2; /* In front of the background */
-    text-align: center;
-    color: white; /* Make sure text is visible over the background */
-    padding-top: 60px;
-}
-  
-h1{
-    color: black;
-    font-size: small;
-}
-
-h3{
-    color: white;
 }
  
 .footer{
-    padding: 12px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 4px;
     background-color: black;
     padding-left: 20px;
 }
 
 .footer p {
     text-align: left;
-    font-size: 12px;
+    font-size: 10px;
     color: white;
     font-family: 'Inter', sans-serif;
 }

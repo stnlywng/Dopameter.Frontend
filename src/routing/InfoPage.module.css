@@ -81,14 +81,14 @@ h3{
 }
  
 .footer{
-    padding: 12px;
+    padding: 4px;
     background-color: black;
     padding-left: 20px;
 }
 
 .footer p {
     text-align: left;
-    font-size: 12px;
+    font-size: 10px;
     color: white;
     font-family: 'Inter', sans-serif;
 }
