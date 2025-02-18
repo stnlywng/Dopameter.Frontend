@@ -299,7 +299,12 @@ const TeeterTotter: React.FC<TeeterTotterProps> = ({
                 boxSize="100%"
                 src={getGremlinImage(
                   currentGremlin.kindOfGremlin,
-                  currentGremlin.intensity
+                  Math.round(
+                    calculateGremlinWeight(
+                      currentGremlin.lastSetWeight,
+                      currentGremlin.lastFedDate
+                    )
+                  ) * 10
                 )}
                 alt={currentGremlin.name}
                 style={{
